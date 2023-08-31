@@ -1,0 +1,4 @@
+*.ino.mem
+*.ino.map
+*.ino.lk
+*.ino.elf
