@@ -1,22 +1,18 @@
 
 #pragma once
 
-#include "src/CH55x_QMK_Lite.h"
-#include "config.h"
-
-extern const __code uint16_t keymaps[MATRIX_ROWS][MATRIX_COLS];
-
 // clang-format off
-#define LAYOUT_all(         \
-	K00, K01, K02, K03,     \
-	K10, K11, K12, K13,     \
-	K20, K21, K22,          \
-	K30, K31, K32,          \
-	K40, K41, K42           \
-)                           \
-    {K00, K01, K02, K03},   \
-	{K10, K11, K12, K13},   \
-	{K20, K21, K22,KC_NO},  \
-	{K30, K31, K32,KC_NO},  \
-	{K40, K41, K42,KC_NO}   \
+
+#define KEY_MAPS {								\
+    {KC_NUM, KC_PSLS,    KC_PAST,    KC_PMNS},	\
+    {KC_P7,  KC_P8,      KC_P9,      KC_PPLS},	\
+    {KC_P4,  KC_P5,      KC_P6,		KC_NO},		\
+    {KC_P1,  KC_P2,      KC_P3,		KC_NO},		\
+    {KC_P0,  KC_PDOT,    KC_PENT,	KC_NO},		\
+};												\
+
+#define ENCODER_MAP {							\
+    ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN)	\
+};												\
+
 // clang-format on

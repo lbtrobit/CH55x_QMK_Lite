@@ -1,5 +1,5 @@
 #include "USBconstant.h"
-#include "../../config.h"
+#include "../../keyboards/config_common.h"
 #include "../qmk/tmk_core/protocol/report.h"
 #include <stdint.h>
 

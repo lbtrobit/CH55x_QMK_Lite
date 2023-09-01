@@ -5,7 +5,7 @@
 #include "USBconstant.h"
 #include "USBhandler.h"
 #include "USBHID.h"
-#include "../../config.h"
+#include "../../keyboards/RP17/config.h"
 #include "../qmk/tmk_core/protocol/host.h"
 #include "../qmk/tmk_core/protocol/report.h"
 #include <Arduino.h>

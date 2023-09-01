@@ -16,11 +16,12 @@
 ### 使用方法
 
 1. 克隆本仓库
-2. 参考RP17工程修改默认矩阵和键值：`keymap.h`、`keymap.c`，修改功能配置：`config.h`，修改`RP17_via.json`文件来适配via
-3. 用Arduino IDE打开修改后的`***.ino`文件
-4. 安装[CH55xduino](https://github.com/DeqingSun/ch55xduino)
-5. 在`USB Settings` 中选择 `USER CODE w/ 266B ram`
-6. 编译上传，需要安装驱动，安装方式参考[CH55xduino](https://github.com/DeqingSun/ch55xduino)，中文说明[CH55xduino](https://github.com/lbtrobit/ch55xduino)
+2. 复制keyboards文件夹下RP17并命名为自己的键盘，修改默认键值：`keymap.h`，修改功能配置：`config.h`，修改`***_via.json`文件来适配via
+3. 修改config_common.h文件的路径为自己键盘的文件路径。
+4. 用Arduino IDE打开修改后的`CH55x_QMK_Lite.ino`文件
+5. 安装[CH55xduino](https://github.com/DeqingSun/ch55xduino)
+6. 在`USB Settings` 中选择 `USER CODE w/ 266B ram`
+7. 编译上传，需要安装驱动，安装方式参考[CH55xduino](https://github.com/DeqingSun/ch55xduino)，中文说明[CH55xduino](https://github.com/lbtrobit/ch55xduino)
 
 
 # 小白使用文档

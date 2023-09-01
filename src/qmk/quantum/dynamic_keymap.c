@@ -18,8 +18,10 @@
 #include "quantum.h"
 #include "dynamic_keymap.h"
 #include "via.h"
-#include "../../../keymap.h"
 #include <stdint.h>
+
+const __code uint16_t keymaps[MATRIX_ROWS][MATRIX_COLS] = KEY_MAPS
+const __code uint16_t encoder_map[NUM_ENCODERS][NUM_DIRECTIONS] = ENCODER_MAP
 
 uint16_t dynamic_keymap_get_keycode(uint8_t row, uint8_t column) {
     uint8_t address = DYNAMIC_KEYMAP_EEPROM_ADDR + (row * MATRIX_COLS * 2) + (column * 2);

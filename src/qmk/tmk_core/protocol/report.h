@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdint.h>
 #include <stdbool.h>
 #include "../../quantum/keycode.h"
-#include "../../../../config.h"
+#include "../../../../keyboards/config_common.h"
 
 // clang-format off
 

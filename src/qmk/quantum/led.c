@@ -16,7 +16,7 @@
 #include "led.h"
 #include "../tmk_core/protocol/host.h"
 #include "../platforms/gpio.h"
-#include "../../../config.h"
+#include "../../../keyboards/config_common.h"
 
 #ifndef LED_PIN_ON_STATE
 #    define LED_PIN_ON_STATE 1
