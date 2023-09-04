@@ -39,6 +39,23 @@
 #define DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE    (DYNAMIC_KEYMAP_EEPROM_MAX_ADDR - DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + 1)
 #define DYNAMIC_KEYMAP_MACRO_DELAY          TAP_CODE_DELAY
 
+#define MACRO_ID_NULL  0xFF
+
+typedef struct
+{
+    uint8_t macro_id;   // Current macro ID
+    uint8_t dataPtr;    // Current position in the macro data
+    uint8_t startPtr;   // Start position in the macro data
+    uint8_t loopCount;  // Number of times to loop
+    uint16_t delayms;   // delay code
+} dynamic_macro_t;
+
+typedef enum{
+    MACRO_STATE_ABORTED,
+    MACRO_STATE_RUNNING,
+    MACRO_STATE_DONE
+} macro_state_e;
+
 uint16_t dynamic_keymap_get_keycode(uint8_t row, uint8_t column);
 void     dynamic_keymap_set_keycode(uint8_t row, uint8_t column, uint16_t keycode);
 #ifdef ENCODER_ENABLE
@@ -46,5 +63,6 @@ uint16_t dynamic_keymap_get_encoder(uint8_t encoder_id, bool clockwise);
 void     dynamic_keymap_set_encoder(uint8_t encoder_id, bool clockwise, uint16_t keycode);
 #endif // ENCODER_ENABLE
 void dynamic_keymap_reset(void);
-void dynamic_keymap_macro_reset(void);
-void dynamic_keymap_macro_send(uint8_t id);
+void dynamic_macro_reset(void);
+void dynamic_macro_pressed(uint8_t id);
+void dynamic_macro_task(void);

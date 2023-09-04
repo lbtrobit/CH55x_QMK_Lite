@@ -31,6 +31,7 @@ void send_keyboard_report(void);
 
 extern void add_key(uint8_t key);
 extern void del_key(uint8_t key);
+extern void clear_keys(void);
 
 /* modifier */
 void    add_mods(uint8_t mods);

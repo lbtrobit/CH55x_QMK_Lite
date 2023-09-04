@@ -32,7 +32,7 @@ void eeconfig_init_via(void) {
     // This resets the keymaps in EEPROM to what is in flash.
     dynamic_keymap_reset();
     // This resets the macros in EEPROM to nothing.
-    dynamic_keymap_macro_reset();
+    dynamic_macro_reset();
     // Save the magic number last, in case saving was interrupted
     eeprom_write_byte(VIA_EEPROM_MAGIC_ADDR, VIA_MAGIC_CODE);
 }
@@ -42,12 +42,43 @@ bool process_record_via(uint16_t keycode, keyrecord_t *record) {
     // Handle macros
     if (record->event.pressed) {
         if (keycode >= QK_MACRO && keycode <= QK_MACRO_MAX) {
-            dynamic_keymap_macro_send(keycode - QK_MACRO);
+            dynamic_macro_pressed(keycode - QK_MACRO);
             return false;
         }
     }
 
     return true;
+}
+
+void via_custom_value_command(uint8_t *data, uint8_t length) {
+    // data = [ command_id, channel_id, value_id, value_data ]
+    uint8_t *command_id = &(data[0]);
+    uint8_t *channel_id = &(data[1]);
+    uint8_t *value_id_and_data = &(data[2]);
+
+    if (*channel_id == id_qmk_macro_loop_channel) {
+        switch (*command_id) {
+            case id_custom_set_value: {
+                eeprom_write_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + data[2] - 1, data[3]);
+                break;
+            }
+            case id_custom_get_value: {
+                data[3] = eeprom_read_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + data[2] - 1);
+                break;
+            }
+            case id_custom_save: {
+                eeprom_write_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + data[2] - 1, data[3]);
+                break;
+            }
+            default: {
+                *command_id = id_unhandled;
+                break;
+            }
+        }
+        return;
+    }
+
+    *command_id = id_unhandled;
 }
 
 void raw_hid_receive(uint8_t *data, uint8_t length) {
@@ -80,6 +111,7 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
         case id_custom_set_value:
         case id_custom_get_value:
         case id_custom_save:
+            via_custom_value_command(data, length);
             break;
         case id_eeprom_reset:
             eeconfig_init_via();
@@ -107,7 +139,7 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
             break;
         }
         case id_dynamic_keymap_macro_reset: {
-            dynamic_keymap_macro_reset();
+            dynamic_macro_reset();
             break;
         }
         case id_dynamic_keymap_get_layer_count: {

@@ -34,6 +34,13 @@ void del_key(uint8_t key) {
     del_key_from_report(&keyboard_report, key);
 }
 
+void clear_keys(void) {
+    for (uint8_t i = 0; i < KEYBOARD_REPORT_SIZE; i++) {
+        keyboard_report.raw[i] = 0;
+    }
+    real_mods = 0;
+}
+
 /** \brief Send keyboard report
  *
  * FIXME: needs doc

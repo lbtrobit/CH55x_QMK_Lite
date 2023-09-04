@@ -19,9 +19,14 @@
 #include "dynamic_keymap.h"
 #include "via.h"
 #include <stdint.h>
+#include <ctype.h>
 
 const __code uint16_t keymaps[MATRIX_ROWS][MATRIX_COLS] = KEY_MAPS
+#ifdef ENCODER_ENABLE
 const __code uint16_t encoder_map[NUM_ENCODERS][NUM_DIRECTIONS] = ENCODER_MAP
+#endif // ENCODER_ENABLE
+
+__xdata dynamic_macro_t macro = {MACRO_ID_NULL, 0, 0, 0};
 
 uint16_t dynamic_keymap_get_keycode(uint8_t row, uint8_t column) {
     uint8_t address = DYNAMIC_KEYMAP_EEPROM_ADDR + (row * MATRIX_COLS * 2) + (column * 2);
@@ -69,88 +74,168 @@ void dynamic_keymap_reset(void) {
 #endif // ENCODER_ENABLE
 }
 
-void dynamic_keymap_macro_reset(void) {
+void dynamic_macro_reset(void) {
     for (uint8_t i = 0; i < DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE; i++) {
         eeprom_write_byte(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + i, 0);
     }
+    // reset macro loop count
+    for (uint8_t i = 0; i < VIA_EEPROM_CUSTOM_MACRO_LOOP_SIZE; i++) {
+        eeprom_write_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + i, 0);
+    }
 }
 
-void dynamic_keymap_macro_send(uint8_t id) {
+void dynamic_macro_pressed(uint8_t id) {
+
+    // send null report to clear the keyboard state
+    clear_keys();
+    send_keyboard_report();
+
+    // If the macro is already running, then stop it.
+    if (macro.macro_id == id) {
+        macro.macro_id = MACRO_ID_NULL;
+        return;
+    }
+
     // Check the last byte of the buffer.
     // If it's not zero, then we are in the middle
     // of buffer writing, possibly an aborted buffer
     // write. So do nothing.
-    uint8_t p = DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE - 1;
-    if (eeprom_read_byte(p) != 0) {
+    macro.dataPtr = DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE - 1;
+    if (eeprom_read_byte(macro.dataPtr) != 0) {
         return;
     }
 
+    // start new macro
+    macro.macro_id = id;
+    macro.delayms = 0;
+    macro.loopCount = eeprom_read_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + macro.macro_id);
+
     // Skip N null characters
     // p will then point to the Nth macro
-    p         = DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR;
+    macro.dataPtr = DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR;
     while (id > 0) {
         // If we are past the end of the buffer, then there is
         // no Nth macro in the buffer.
-        if (p == (DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE)) {
+        if (macro.dataPtr == (DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE)) {
+            macro.macro_id = MACRO_ID_NULL;
             return;
         }
-        if (eeprom_read_byte(p) == 0) {
+        if (eeprom_read_byte(macro.dataPtr) == 0) {
             --id;
         }
-        ++p;
+        ++macro.dataPtr;
     }
+    macro.startPtr = macro.dataPtr;  
+}
+
+uint8_t dynamic_macro_send(void) {
+
+    uint8_t macro_state = MACRO_STATE_ABORTED;
 
     // Send the macro string by making a temporary string.
-    char data[8] = {0};
-    // We already checked there was a null at the end of
-    // the buffer, so this cannot go past the end
-    while (1) {
-        data[0] = eeprom_read_byte(p++);
-        data[1] = 0;
-        // Stop at the null terminator of this macro string
-        if (data[0] == 0) {
-            break;
-        }
-        if (data[0] == SS_QMK_PREFIX) {
-            // Get the code
-            data[1] = eeprom_read_byte(p++);
+    char data[9] = {0};
+
+    data[0] = eeprom_read_byte(macro.dataPtr++);
+    // Stop at the null terminator of this macro string
+    if (data[0] == 0) {
+        macro_state = MACRO_STATE_DONE;
+        return macro_state;
+    } else if (data[0] == SS_QMK_PREFIX) {
+        // Get the code
+        data[1] = eeprom_read_byte(macro.dataPtr++);
+        // Unexpected null, abort.
+        if (data[1] == 0) {
+            return macro_state;
+        } else if (data[1] == SS_TAP_CODE || data[1] == SS_DOWN_CODE || data[1] == SS_UP_CODE) {
+            // Get the keycode
+            data[2] = eeprom_read_byte(macro.dataPtr++);
             // Unexpected null, abort.
-            if (data[1] == 0) {
-                return;
+            if (data[2] == 0) {
+                return macro_state;
             }
-            if (data[1] == SS_TAP_CODE || data[1] == SS_DOWN_CODE || data[1] == SS_UP_CODE) {
-                // Get the keycode
-                data[2] = eeprom_read_byte(p++);
-                // Unexpected null, abort.
-                if (data[2] == 0) {
-                    return;
-                }
-                // Null terminate
-                data[3] = 0;
-            } else if (data[1] == SS_DELAY_CODE) {
-                // Get the number and '|'
-                // At most this is 4 digits plus '|'
-                uint8_t i = 2;
-                while (1) {
-                    data[i] = eeprom_read_byte(p++);
-                    // Unexpected null, abort
-                    if (data[i] == 0) {
-                        return;
-                    }
-                    // Found '|', send it
-                    if (data[i] == '|') {
-                        data[i + 1] = 0;
-                        break;
-                    }
-                    // If haven't found '|' by i==6 then
-                    // number too big, abort
-                    if (i == 6) {
-                        return;
-                    }
-                    ++i;
-                }
+            switch (data[1]) {
+                case SS_TAP_CODE:
+                    // tap
+                    tap_code(data[2]);
+                    break;
+                case SS_DOWN_CODE:
+                    // down
+                    register_code(data[2]);
+                    break;
+                case SS_UP_CODE:
+                    // up
+                    unregister_code(data[2]);
+                    break;
             }
+        } else if (data[1] == SS_DELAY_CODE) {
+            // Get the number and '|'
+            // At most this is 4 digits plus '|'
+            uint8_t i = 2;
+            while (1) {
+                data[i] = eeprom_read_byte(macro.dataPtr++);
+                // Unexpected null, abort
+                if (data[i] == 0) {
+                    return macro_state;
+                }
+                // Found '|', send it
+                if (data[i] == '|') {
+                    break;
+                }
+                // If haven't found '|' by i==7 then
+                // number too big, abort
+                if (i == 7) {
+                    return macro_state;
+                }
+                ++i;
+            }
+            // delay
+            uint16_t ms = 0;
+            i = 2;
+            uint8_t keycode = data[i];
+            while (isdigit(keycode)) {
+                ms = ms * 10 + (keycode - '0');
+                keycode = data[++i];
+            }
+            macro.delayms = ms;
         }
-        send_string_with_delay(data, DYNAMIC_KEYMAP_MACRO_DELAY);
+    } else {
+        send_char(data[0]);
+    }
+
+    macro_state = MACRO_STATE_RUNNING;
+    return macro_state;
+}
+
+void dynamic_macro_task(void) {
+
+    // If the macro is not running, then do nothing.
+    if (macro.macro_id == MACRO_ID_NULL) {
+        return;
+    } 
+    // If the macro delay is not zero, then decrement it.
+    if (macro.delayms > 0) {
+        --macro.delayms;
+        return;
+    }
+
+    // If the macro delay is zero, then send the next character.
+    uint8_t macro_state = dynamic_macro_send();
+    // If the macro is done, then stop it.
+    if (macro_state == MACRO_STATE_DONE) {
+        // If the macro is looping and not infinite, then decrement the loop count.
+        if (macro.loopCount > 0) {
+            if (macro.loopCount != 255)
+            {
+                --macro.loopCount;
+            }
+            macro.dataPtr = macro.startPtr;
+        } else if (macro.loopCount == 0) {
+            macro.macro_id = MACRO_ID_NULL;
+        }
+    } else if (macro_state == MACRO_STATE_ABORTED) {
+        // If the macro is aborted, then stop it.
+        macro.macro_id = MACRO_ID_NULL;
+        clear_keys();
+        send_keyboard_report();
     }
 }

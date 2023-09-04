@@ -25,7 +25,11 @@
 // By default, dynamic keymaps will start at this if there is no
 // custom config
 #define VIA_EEPROM_CUSTOM_CONFIG_ADDR       (VIA_EEPROM_MAGIC_ADDR + 1)
-#define VIA_EEPROM_CUSTOM_CONFIG_SIZE       0
+
+#define VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR   VIA_EEPROM_CUSTOM_CONFIG_ADDR
+#define VIA_EEPROM_CUSTOM_MACRO_LOOP_SIZE   5
+
+#define VIA_EEPROM_CUSTOM_CONFIG_SIZE       VIA_EEPROM_CUSTOM_MACRO_LOOP_SIZE
 
 #define VIA_EEPROM_CONFIG_END               (VIA_EEPROM_CUSTOM_CONFIG_ADDR + VIA_EEPROM_CUSTOM_CONFIG_SIZE)
 
@@ -68,7 +72,12 @@ enum via_keyboard_value_id {
 
 enum via_channel_id {
     id_custom_channel         = 0,
+    id_qmk_backlight_channel  = 1,
+    id_qmk_rgblight_channel   = 2,
     id_qmk_rgb_matrix_channel = 3,
+    id_qmk_audio_channel      = 4,
+
+    id_qmk_macro_loop_channel = 5,
 };
 
 enum via_qmk_rgb_matrix_value {
@@ -78,12 +87,17 @@ enum via_qmk_rgb_matrix_value {
     id_qmk_rgb_matrix_color        = 4,
 };
 
+enum via_qmk_macro_loop_value {
+    id_qmk_macro_loop_m0    = 1,
+    id_qmk_macro_loop_m1    = 2,
+    id_qmk_macro_loop_m2    = 3,
+    id_qmk_macro_loop_m3    = 4,
+    id_qmk_macro_loop_m4    = 5,
+};
+
 // Called by QMK core to initialize dynamic keymaps etc.
 void eeconfig_init_via(void);
 void via_init(void);
-
-// Used by VIA to store and retrieve the layout options.
-uint32_t via_get_layout_options(void);
 
 // Called by QMK core to process VIA-specific keycodes.
 bool process_record_via(uint16_t keycode, keyrecord_t *record);

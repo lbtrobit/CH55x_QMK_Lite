@@ -38,6 +38,7 @@ void action_exec(keyevent_t event) {
     record.event = event;
 
     if (record.event.type == TICK_EVENT) {
+        dynamic_macro_task();
         return;
     }
 

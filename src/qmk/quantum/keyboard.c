@@ -67,20 +67,13 @@ static void generate_tick_event(void) {
  * @return true Matrix did change
  * @return false Matrix didn't change
  */
-static bool matrix_task(void) {
+static void matrix_task(void) {
 
     static __xdata matrix_row_t matrix_previous[MATRIX_ROWS];
 
-    matrix_scan();
-    bool matrix_changed = false;
-    for (uint8_t row = 0; row < MATRIX_ROWS && !matrix_changed; row++) {
-        matrix_changed |= matrix_previous[row] ^ matrix[row];
-    }
-
-    // Short-circuit the complete matrix processing if it is not necessary
-    if (!matrix_changed) {
+    if(!matrix_scan()) {
         generate_tick_event();
-        return matrix_changed;
+        return;
     }
 
     for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
@@ -108,8 +101,6 @@ static bool matrix_task(void) {
 
         matrix_previous[row] = current_row;
     }
-
-    return matrix_changed;
 }
 
 /** \brief Main task that is repeatedly called as fast as possible. */

@@ -39,17 +39,14 @@ bool is_key_pressed(report_keyboard_t* keyboard_report, uint8_t key) {
  * FIXME: Needs doc
  */
 void add_key_to_report(report_keyboard_t* keyboard_report, uint8_t key) {
-    int8_t empty = -1;
     for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; i++) {
         if (keyboard_report->keys[i] == key) {
             return;
         }
-        if (empty == -1 && keyboard_report->keys[i] == 0) {
-            empty = i;
+        if (keyboard_report->keys[i] == 0) {
+            keyboard_report->keys[i] = key;
+            return;
         }
-    }
-    if (empty != -1) {
-        keyboard_report->keys[empty] = key;
     }
 }
 

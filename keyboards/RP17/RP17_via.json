@@ -11,5 +11,67 @@
       ["3,0", "3,1", "3,2"],
       [{"w" : 2},"4,0", "4,1", {"h":2,"y":-1},"4,2"]
     ]
-  }
+  },
+  "menus": [
+    {
+      "label": "Macros Loop",
+      "content": [
+        {
+          "label": " M0 ",
+          "content": [
+            {
+              "label": "Loop Count",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m0", 5, 1]
+            }
+          ]
+        },
+        {
+          "label": " M1 ",
+          "content": [
+            {
+              "label": "Loop Count",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m1", 5, 2]
+            }
+          ]
+        },
+        {
+          "label": " M2 ",
+          "content": [
+            {
+              "label": "Loop Count",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m2", 5, 3]
+            }
+          ]
+        },
+        {
+          "label": " M3 ",
+          "content": [
+            {
+              "label": "Loop Count",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m3", 5, 4]
+            }
+          ]
+        },
+        {
+          "label": " M4 ",
+          "content": [
+            {
+              "label": "Loop Count",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m4", 5, 5]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

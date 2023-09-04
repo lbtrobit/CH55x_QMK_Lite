@@ -47,14 +47,6 @@ extern const uint8_t ascii_to_keycode_lut[128];
 // clang-format on
 
 /**
- * \brief Type out a string of ASCII characters, with a delay between each character.
- *
- * \param string The string to type out.
- * \param interval The amount of time, in milliseconds, to wait before typing the next character.
- */
-void send_string_with_delay(const char *string, uint8_t interval);
-
-/**
  * \brief Type out an ASCII character.
  *
  * \param ascii_code The character to type.

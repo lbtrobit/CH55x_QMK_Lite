@@ -138,52 +138,6 @@ const uint8_t ascii_to_keycode_lut[128] = {
 // Note: we bit-pack in "reverse" order to optimize loading
 #define PGM_LOADBIT(mem, pos) ((pgm_read_byte(&((mem)[(pos) / 8])) >> ((pos) % 8)) & 0x01)
 
-void send_string_with_delay(const char *string, uint8_t interval) {
-    while (*string) {
-        char ascii_code = *string;
-        if (ascii_code == SS_QMK_PREFIX) {
-            ++string;
-            ascii_code = *string;
-            switch (ascii_code) {
-                case SS_TAP_CODE:
-                    // tap
-                    tap_code(*(++string));
-                    break;
-                case SS_DOWN_CODE:
-                    // down
-                    register_code(*(++string));
-                    break;
-                case SS_UP_CODE:
-                    // up
-                    unregister_code(*(++string));
-                    break;
-                case SS_DELAY_CODE:
-                {
-                    // delay
-                    uint16_t ms = 0;
-                    uint8_t keycode = *(++string);
-                    while (isdigit(keycode)) {
-                        ms = ms * 10 + (keycode - '0');
-                        keycode = *(++string);
-                    }
-                    while (ms--)
-                        wait_ms(1);
-                    break;
-                }
-            }
-        } else {
-            send_char(ascii_code);
-        }
-        ++string;
-        // interval
-        {
-            uint8_t ms = interval;
-            while (ms--)
-                wait_ms(1);
-        }
-    }
-}
-
 void send_char(char ascii_code) {
 
     uint8_t keycode    = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
