@@ -24,6 +24,7 @@ static __xdata uint8_t real_mods = 0;
 static __xdata uint8_t weak_mods = 0;
 
 __xdata report_keyboard_t keyboard_report;
+__xdata report_mouse_t mouse_report;
 
 /* key */
 void add_key(uint8_t key) {
@@ -40,6 +41,38 @@ void clear_keys(void) {
     }
     real_mods = 0;
 }
+
+#ifdef MOUSE_ENABLE
+/* mouse */
+void add_mouse_key(uint8_t key) {
+    add_mousekey_to_report(&mouse_report, key);
+}
+
+void del_mouse_key(uint8_t key) {
+    del_mousekey_from_report(&mouse_report, key);
+}
+
+void clear_mouse(void) {
+    mouse_report.x = 0;
+    mouse_report.y = 0;
+    mouse_report.v = 0;
+    mouse_report.buttons = 0;
+}
+
+/** \brief Send mouse report
+ *
+ * FIXME: needs doc
+ */
+void send_mouse_report(void) {
+    static __xdata report_mouse_t last_report;
+
+    /* Only send the report if there are changes to propagate to the host. */
+    if (memcmp(&mouse_report, &last_report, sizeof(report_mouse_t)) != 0) {
+        memcpy(&last_report, &mouse_report, sizeof(report_mouse_t));
+        host_mouse_send(&mouse_report);
+    }
+}
+#endif
 
 /** \brief Send keyboard report
  *

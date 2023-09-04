@@ -29,6 +29,7 @@ enum hid_report_ids {
     REPORT_ID_KEYBOARD = 1,
     REPORT_ID_SYSTEM,
     REPORT_ID_CONSUMER,
+    REPORT_ID_MOUSE,
 };
 
 /* Consumer Page (0x0C)
@@ -150,6 +151,14 @@ typedef struct {
     uint16_t usage;
 } report_extra_t;
 
+typedef struct {
+    uint8_t report_id;
+    uint8_t buttons;
+    int8_t x;
+    int8_t y;
+    int8_t v;
+} report_mouse_t;
+
 uint16_t report_keycode_to_system(uint8_t key);
 uint16_t report_keycode_to_consumer(uint8_t key);
 #endif
@@ -157,6 +166,9 @@ uint16_t report_keycode_to_consumer(uint8_t key);
 bool is_key_pressed(report_keyboard_t* keyboard_report, uint8_t key);
 void add_key_to_report(report_keyboard_t* keyboard_report, uint8_t key);
 void del_key_from_report(report_keyboard_t* keyboard_report, uint8_t key);
+
+void add_mousekey_to_report(report_mouse_t* mouse_report, uint8_t key);
+void del_mousekey_from_report(report_mouse_t* mouse_report, uint8_t key);
 
 #ifdef __cplusplus
 }

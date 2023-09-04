@@ -61,3 +61,10 @@ void host_keyboard_send(report_keyboard_t *report) {
 void raw_hid_send(uint8_t *data, uint8_t length){
     USB_EP2_send((uint8_t *)data,length);
 }
+
+#ifdef MOUSE_ENABLE
+void host_mouse_send(report_mouse_t *report) {
+    report->report_id = REPORT_ID_MOUSE;
+    USB_EP1_send((uint8_t *)report, 5);
+}
+#endif

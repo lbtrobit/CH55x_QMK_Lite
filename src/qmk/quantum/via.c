@@ -50,7 +50,7 @@ bool process_record_via(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-void via_custom_value_command(uint8_t *data, uint8_t length) {
+void via_custom_value_command(uint8_t *data) {
     // data = [ command_id, channel_id, value_id, value_data ]
     uint8_t *command_id = &(data[0]);
     uint8_t *channel_id = &(data[1]);
@@ -111,7 +111,7 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
         case id_custom_set_value:
         case id_custom_get_value:
         case id_custom_save:
-            via_custom_value_command(data, length);
+            via_custom_value_command(data);
             break;
         case id_eeprom_reset:
             eeconfig_init_via();

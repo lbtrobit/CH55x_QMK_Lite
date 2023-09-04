@@ -26,12 +26,18 @@ extern "C" {
 #endif
 
 extern __xdata report_keyboard_t keyboard_report;
+extern __xdata report_mouse_t mouse_report;
 
 void send_keyboard_report(void);
+void send_mouse_report(void);
 
 extern void add_key(uint8_t key);
 extern void del_key(uint8_t key);
 extern void clear_keys(void);
+
+void add_mouse_key(uint8_t key);
+void del_mouse_key(uint8_t key);
+void clear_mouse(void);
 
 /* modifier */
 void    add_mods(uint8_t mods);

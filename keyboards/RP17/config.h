@@ -17,6 +17,9 @@
 
 #define EXTRAKEY_ENABLE         //开启多媒体和系统按键
 
+#define MOUSE_ENABLE            //开启鼠标按键
+#define FCODE_TO_MOUSE_ENABLE   //开启发宏时F13-F23键转鼠标按键，补充VIA不能设置发鼠标按键宏，能拓展更多应用。键值对应关系如表：FCodeToMousemap
+
 #define ENCODER_ENABLE          //开启编码器
 #define NUM_ENCODERS    1       //编码器个数
 #define ENCODERS_PAD_A  { 12 }  //编码器A引脚

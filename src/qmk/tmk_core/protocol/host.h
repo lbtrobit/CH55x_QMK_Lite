@@ -30,6 +30,7 @@ uint8_t host_keyboard_leds(void);
 void    host_keyboard_send(report_keyboard_t *report);
 void    host_system_send(uint16_t usage);
 void    host_consumer_send(uint16_t usage);
+void    host_mouse_send(report_mouse_t *report);
 
 void    raw_hid_receive(uint8_t *data, uint8_t length);
 void    raw_hid_send(uint8_t *data, uint8_t length);

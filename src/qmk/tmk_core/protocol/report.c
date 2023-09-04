@@ -121,3 +121,39 @@ uint16_t report_keycode_to_consumer(uint8_t key) {
     return 0;
 }
 #endif
+
+#ifdef MOUSE_ENABLE
+void add_mousekey_to_report(report_mouse_t* mouse_report, uint8_t code) {
+    if (code == KC_MS_UP) {
+        mouse_report->y = -1;
+    } else if (code == KC_MS_DOWN) {
+        mouse_report->y = 1;
+    } else if (code == KC_MS_LEFT) {
+        mouse_report->x = -1;
+    } else if (code == KC_MS_RIGHT) {
+        mouse_report->x = 1;
+    } else if (code == KC_MS_WH_UP) {
+        mouse_report->v = 1;
+    } else if (code == KC_MS_WH_DOWN) {
+        mouse_report->v = -1;
+    } else {
+        if (IS_MOUSEKEY_BUTTON(code)) {
+            mouse_report->buttons |= 1 << (code - KC_MS_BTN1);
+        }
+    }
+}
+
+void del_mousekey_from_report(report_mouse_t* mouse_report, uint8_t code) {
+    if (code == KC_MS_UP || code == KC_MS_DOWN) {
+        mouse_report->y = 0;
+    } else if (code == KC_MS_LEFT || code == KC_MS_RIGHT) {
+        mouse_report->x = 0;
+    } else if (code == KC_MS_WH_UP || code == KC_MS_WH_DOWN) {
+        mouse_report->v = 0;
+    } else {
+        if (IS_MOUSEKEY_BUTTON(code)) {
+            mouse_report->buttons &= ~(1 << (code - KC_MS_BTN1));
+        }
+    }
+}
+#endif

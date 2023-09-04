@@ -84,11 +84,49 @@ void dynamic_macro_reset(void) {
     }
 }
 
+void dynamic_macro_clear_keys(void) {
+    clear_keys();
+    send_keyboard_report();
+#ifdef MOUSE_ENABLE
+    clear_mouse();
+    send_mouse_report();
+#endif // MOUSE_ENABLE
+}
+
+#ifdef MOUSE_ENABLE
+#   ifdef FCODE_TO_MOUSE_ENABLE
+typedef struct FCodeToMouse {
+    uint8_t FCode;
+    uint8_t MouseCode;
+} FCodeToMouse;
+
+const FCodeToMouse FCodeToMousemap[] = {
+    {KC_F13, KC_MS_BTN1},
+    {KC_F14, KC_MS_BTN2},
+    {KC_F15, KC_MS_BTN3},
+    {KC_F16, KC_MS_UP},
+    {KC_F17, KC_MS_DOWN},
+    {KC_F18, KC_MS_LEFT},
+    {KC_F19, KC_MS_RIGHT},
+    {KC_F20, KC_MS_WH_UP},
+    {KC_F21, KC_MS_WH_DOWN},
+};
+
+uint8_t fcode_to_mouse(uint8_t code) {
+    for (uint8_t i = 0; i < sizeof(FCodeToMousemap) / sizeof(FCodeToMousemap[0]); i++) {
+        if (FCodeToMousemap[i].FCode == code) {
+            return FCodeToMousemap[i].MouseCode;
+        }
+    }
+    return code;
+}
+#   endif // FCODE_TO_MOUSE_ENABLE
+#endif // MOUSE_ENABLE
+
 void dynamic_macro_pressed(uint8_t id) {
 
     // send null report to clear the keyboard state
-    clear_keys();
-    send_keyboard_report();
+    dynamic_macro_clear_keys();
 
     // If the macro is already running, then stop it.
     if (macro.macro_id == id) {
@@ -153,6 +191,12 @@ uint8_t dynamic_macro_send(void) {
             if (data[2] == 0) {
                 return macro_state;
             }
+#ifdef MOUSE_ENABLE
+#  ifdef FCODE_TO_MOUSE_ENABLE
+            // Convert F13-F21 to mouse codes
+            data[2] = fcode_to_mouse(data[2]);
+#  endif // FCODE_TO_MOUSE_ENABLE
+#endif // MOUSE_ENABLE
             switch (data[1]) {
                 case SS_TAP_CODE:
                     // tap
@@ -235,7 +279,6 @@ void dynamic_macro_task(void) {
     } else if (macro_state == MACRO_STATE_ABORTED) {
         // If the macro is aborted, then stop it.
         macro.macro_id = MACRO_ID_NULL;
-        clear_keys();
-        send_keyboard_report();
+        dynamic_macro_clear_keys();
     }
 }

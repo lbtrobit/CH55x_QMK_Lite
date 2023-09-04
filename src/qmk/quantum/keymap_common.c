@@ -39,6 +39,11 @@ action_t action_for_key(keypos_t key) {
       action.code = ACTION_USAGE_CONSUMER(report_keycode_to_consumer(keycode));
     }
 #endif
+#ifdef MOUSE_ENABLE
+    else if (keycode >= KC_MS_UP && keycode <= KC_MS_ACCEL2) {
+      action.code = ACTION_MOUSEKEY(keycode);
+    }
+#endif // MOUSE_ENABLE
     else if (keycode == KC_TRANSPARENT) {
       action.code = ACTION_TRANSPARENT;
     } else if (keycode >= QK_MODS && keycode <= QK_MODS_MAX) {

@@ -100,6 +100,17 @@ void process_action(keyrecord_t record, action_t action) {
             }
             break;
 #endif // EXTRAKEY_ENABLE
+#ifdef MOUSE_ENABLE
+        /* Mouse */
+        case ACT_MOUSEKEY:
+            if (record.event.pressed) {
+                add_mouse_key(action.key.code);
+            } else {
+                del_mouse_key(action.key.code);
+            }
+            send_mouse_report();
+            break;
+#endif // MOUSE_ENABLE
         default:
             break;
     }
@@ -133,6 +144,12 @@ void register_code(uint8_t code) {
         host_consumer_send(report_keycode_to_consumer(code));
     }
 #endif
+#ifdef MOUSE_ENABLE
+    else if (IS_MOUSE_KEYCODE(code)) {
+        add_mouse_key(code);
+        send_mouse_report();
+    }
+#endif
 }
 
 /** \brief Utilities for actions. (FIXME: Needs better description)
@@ -154,6 +171,12 @@ void register_code(uint8_t code) {
         host_system_send(0);
     } else if (IS_CONSUMER_KEYCODE(code)) {
         host_consumer_send(0);
+    }
+#endif
+#ifdef MOUSE_ENABLE
+    else if (IS_MOUSE_KEYCODE(code)) {
+        del_mouse_key(code);
+        send_mouse_report();
     }
 #endif
 }
