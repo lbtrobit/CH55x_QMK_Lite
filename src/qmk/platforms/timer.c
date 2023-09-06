@@ -4,7 +4,7 @@
 #include "timer.h"
 #include <Arduino.h>
 
-static __xdata uint32_t time_offset = 0;
+static __data uint32_t time_offset = 0;
 
 void timer_init(void)
 {

@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 extern "C" {
 #endif
 
-extern __xdata report_keyboard_t keyboard_report;
-extern __xdata report_mouse_t mouse_report;
+extern __idata report_keyboard_t keyboard_report;
+extern __idata report_mouse_t mouse_report;
 
 void send_keyboard_report(void);
 void send_mouse_report(void);

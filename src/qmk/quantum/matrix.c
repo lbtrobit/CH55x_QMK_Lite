@@ -40,8 +40,8 @@ static const __code pin_t col_pins[MATRIX_COLS]   = MATRIX_COL_PINS;
 #endif
 
 /* matrix state(1:on, 0:off) */
-__xdata matrix_row_t raw_matrix[MATRIX_ROWS]; // raw values
-__xdata matrix_row_t matrix[MATRIX_ROWS];     // debounced values
+__idata matrix_row_t raw_matrix[MATRIX_ROWS]; // raw values
+__idata matrix_row_t matrix[MATRIX_ROWS];     // debounced values
 
 void matrix_init_pins(void);
 void matrix_read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row);

@@ -40,7 +40,7 @@ typedef uint32_t matrix_row_t;
 #    error "MATRIX_COLS: invalid value"
 #endif
 
-extern __xdata matrix_row_t matrix[];     // debounced values
+extern __idata matrix_row_t matrix[];     // debounced values
 
 #define MATRIX_ROW_SHIFTER ((matrix_row_t)1)
 

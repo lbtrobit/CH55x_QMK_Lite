@@ -21,7 +21,7 @@ __xdata __at (EP2_ADDR) uint8_t Ep2Buffer[128];
 
 __data uint16_t SetupLen;
 __data uint8_t SetupReq;
-volatile __xdata uint8_t UsbConfig;
+volatile __data uint8_t UsbConfig;
 
 __code uint8_t *__data pDescr;
 
@@ -162,22 +162,22 @@ void USB_EP0_SETUP() {
                    USB_REQ_RECIP_ENDP) // endpoint
         {
           switch (UsbSetupBuf->wIndexL) {
-          case 0x84:
-            UEP4_CTRL =
-                UEP4_CTRL & ~(bUEP_T_TOG | MASK_UEP_T_RES) | UEP_T_RES_NAK;
-            break;
-          case 0x04:
-            UEP4_CTRL =
-                UEP4_CTRL & ~(bUEP_R_TOG | MASK_UEP_R_RES) | UEP_R_RES_ACK;
-            break;
-          case 0x83:
-            UEP3_CTRL =
-                UEP3_CTRL & ~(bUEP_T_TOG | MASK_UEP_T_RES) | UEP_T_RES_NAK;
-            break;
-          case 0x03:
-            UEP3_CTRL =
-                UEP3_CTRL & ~(bUEP_R_TOG | MASK_UEP_R_RES) | UEP_R_RES_ACK;
-            break;
+          // case 0x84:
+          //   UEP4_CTRL =
+          //       UEP4_CTRL & ~(bUEP_T_TOG | MASK_UEP_T_RES) | UEP_T_RES_NAK;
+          //   break;
+          // case 0x04:
+          //   UEP4_CTRL =
+          //       UEP4_CTRL & ~(bUEP_R_TOG | MASK_UEP_R_RES) | UEP_R_RES_ACK;
+          //   break;
+          // case 0x83:
+          //   UEP3_CTRL =
+          //       UEP3_CTRL & ~(bUEP_T_TOG | MASK_UEP_T_RES) | UEP_T_RES_NAK;
+          //   break;
+          // case 0x03:
+          //   UEP3_CTRL =
+          //       UEP3_CTRL & ~(bUEP_R_TOG | MASK_UEP_R_RES) | UEP_R_RES_ACK;
+          //   break;
           case 0x82:
             UEP2_CTRL =
                 UEP2_CTRL & ~(bUEP_T_TOG | MASK_UEP_T_RES) | UEP_T_RES_NAK;
@@ -229,22 +229,22 @@ void USB_EP0_SETUP() {
               0x00) {
             switch (((uint16_t)UsbSetupBuf->wIndexH << 8) |
                     UsbSetupBuf->wIndexL) {
-            case 0x84:
-              UEP4_CTRL = UEP4_CTRL & (~bUEP_T_TOG) |
-                          UEP_T_RES_STALL; // Set endpoint4 IN STALL
-              break;
-            case 0x04:
-              UEP4_CTRL = UEP4_CTRL & (~bUEP_R_TOG) |
-                          UEP_R_RES_STALL; // Set endpoint4 OUT Stall
-              break;
-            case 0x83:
-              UEP3_CTRL = UEP3_CTRL & (~bUEP_T_TOG) |
-                          UEP_T_RES_STALL; // Set endpoint3 IN STALL
-              break;
-            case 0x03:
-              UEP3_CTRL = UEP3_CTRL & (~bUEP_R_TOG) |
-                          UEP_R_RES_STALL; // Set endpoint3 OUT Stall
-              break;
+            // case 0x84:
+            //   UEP4_CTRL = UEP4_CTRL & (~bUEP_T_TOG) |
+            //               UEP_T_RES_STALL; // Set endpoint4 IN STALL
+            //   break;
+            // case 0x04:
+            //   UEP4_CTRL = UEP4_CTRL & (~bUEP_R_TOG) |
+            //               UEP_R_RES_STALL; // Set endpoint4 OUT Stall
+            //   break;
+            // case 0x83:
+            //   UEP3_CTRL = UEP3_CTRL & (~bUEP_T_TOG) |
+            //               UEP_T_RES_STALL; // Set endpoint3 IN STALL
+            //   break;
+            // case 0x03:
+            //   UEP3_CTRL = UEP3_CTRL & (~bUEP_R_TOG) |
+            //               UEP_R_RES_STALL; // Set endpoint3 OUT Stall
+            //   break;
             case 0x82:
               UEP2_CTRL = UEP2_CTRL & (~bUEP_T_TOG) |
                           UEP_T_RES_STALL; // Set endpoint2 IN STALL

@@ -13,7 +13,7 @@
 volatile __xdata uint8_t UpPoint1_Busy  = 0;   //Flag of whether upload pointer is busy
 volatile __xdata uint8_t UpPoint2_Busy = 0;
 
-static __xdata uint8_t statusLED = 0;
+static __data uint8_t statusLED = 0;
 
 typedef void (*pTaskFn)(void);
 

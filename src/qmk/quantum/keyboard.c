@@ -50,7 +50,7 @@ void keyboard_init(void) {
  * internal QMK state machine.
  */
 static void generate_tick_event(void) {
-    static __xdata uint16_t last_tick = 0;
+    static __data uint16_t last_tick = 0;
     const uint16_t  now = timer_read();
 
     if (TIMER_DIFF_16(now, last_tick) != 0) {
@@ -69,7 +69,7 @@ static void generate_tick_event(void) {
  */
 static void matrix_task(void) {
 
-    static __xdata matrix_row_t matrix_previous[MATRIX_ROWS];
+    static __idata matrix_row_t matrix_previous[MATRIX_ROWS];
 
     if(!matrix_scan()) {
         generate_tick_event();

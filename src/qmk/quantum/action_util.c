@@ -20,11 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../platforms/timer.h"
 #include <string.h>
 
-static __xdata uint8_t real_mods = 0;
-static __xdata uint8_t weak_mods = 0;
+static __data uint8_t real_mods = 0;
+static __data uint8_t weak_mods = 0;
 
-__xdata report_keyboard_t keyboard_report;
-__xdata report_mouse_t mouse_report;
+__idata report_keyboard_t keyboard_report;
+__idata report_mouse_t mouse_report;
 
 /* key */
 void add_key(uint8_t key) {

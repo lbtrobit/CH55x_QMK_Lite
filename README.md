@@ -19,9 +19,10 @@
 2. 复制keyboards文件夹下RP17并命名为自己的键盘，修改默认键值：`keymap.h`，修改功能配置：`config.h`，修改`***_via.json`文件来适配via
 3. 修改config_common.h文件的路径为自己键盘的文件路径。
 4. 用Arduino IDE打开修改后的`CH55x_QMK_Lite.ino`文件
-5. 安装[CH55xduino](https://github.com/DeqingSun/ch55xduino)
+5. 安装[CH55xduino](https://github.com/DeqingSun/ch55xduino)，本项目使用版本0.0.18验证。
 6. 在`USB Settings` 中选择 `USER CODE w/ 266B ram`
 7. 编译上传，需要安装驱动，安装方式参考[CH55xduino](https://github.com/DeqingSun/ch55xduino)，中文说明[CH55xduino](https://github.com/lbtrobit/ch55xduino)
+8. 如果功能选项多开空间不足，可注释掉CH55xDuino main.c文件里没用到的部分，例如安装路径下：C:\Users\Public\AppData\Local\Arduino15\packages\CH55xDuino\hardware\mcs51\0.0.18\cores\ch55xduino\main.c，注释掉Timer2Interrupt(void)、GPIOInterrupt(void)、Uart0_ISR(void)、Uart1_ISR(void)、INT0_ISR(void)、INT1_ISR(void)这几个本项目没用到的中断函数，可多出1k rom。
 
 
 # 小白使用文档
