@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdint.h>
 #include <stdbool.h>
 #include "report.h"
+#include "../../../ch55xduino/USBHID.h"
 
 #ifdef __cplusplus
 extern "C" {

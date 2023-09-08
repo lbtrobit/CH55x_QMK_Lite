@@ -13,6 +13,8 @@
 #define EP1_ADDR 10
 #define EP2_ADDR 138
 
+#define EP2_SIZE 32
+
 /** Type define for the device configuration descriptor structure. This must be
  * defined in the application code, as the configuration descriptor contains
  * several sub-descriptors which vary between devices, and which describe the

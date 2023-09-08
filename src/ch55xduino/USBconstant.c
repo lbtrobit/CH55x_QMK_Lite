@@ -75,14 +75,14 @@ __code USB_Descriptor_Configuration_t ConfigurationDescriptor = {
     .HID_RawReportINEndpoint = {.Header = {.Size = sizeof(USB_Descriptor_Endpoint_t),   .Type = DTYPE_Endpoint},
                                 .EndpointAddress = 0x82,
                                 .Attributes = (EP_TYPE_INTERRUPT | ENDPOINT_ATTR_NO_SYNC | ENDPOINT_USAGE_DATA),
-                                .EndpointSize = 32,
-                                .PollingIntervalMS = 10
+                                .EndpointSize = EP2_SIZE,
+                                .PollingIntervalMS = 50
     },
     .HID_RawReportOUTEndpoint = {.Header = {.Size = sizeof(USB_Descriptor_Endpoint_t),  .Type = DTYPE_Endpoint},
                                 .EndpointAddress = 0x02,
                                 .Attributes = (EP_TYPE_INTERRUPT | ENDPOINT_ATTR_NO_SYNC | ENDPOINT_USAGE_DATA),
-                                .EndpointSize = 32,
-                                .PollingIntervalMS = 10
+                                .EndpointSize = EP2_SIZE,
+                                .PollingIntervalMS = 50
     },
 };
 
@@ -184,13 +184,13 @@ __code uint8_t RawHIDReportDescriptor[] = {
     0xFF, // todo: clean up
     // https://github.com/qmk/qmk_firmware/blob/a4771e4fe4479869a997b130c1435ee072cbc2fa/tmk_core/protocol/vusb/vusb.c#L664
     0x09, 0x61, 0xa1, 0x01, 0x09, 0x62, 0x15, 0x00, 0x26, 0xFF, 0x00, 0x95,
-    32,         // length: 32
+    EP2_SIZE,      // length: 32
     0x75, 0x08, // size: 8
     0x81, 0x06, // INPUT
     0x09, 0x63,
     0x15, 0x00,
     0x26, 0xFF, 0x00,
-    0x95, 32,   //REPORT_COUNT(32)
+    0x95, EP2_SIZE,  //REPORT_COUNT(32)
     0x75, 0x08, //REPORT_SIZE(8)
     0x91, 0x83, // OUTPUT
     0xC0        // End Collection (Application)

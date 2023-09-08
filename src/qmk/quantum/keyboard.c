@@ -115,6 +115,8 @@ void keyboard_task(void) {
 
     matrix_task();
 
+    raw_hid_task();
+
 #ifdef ENCODER_ENABLE
     encoder_read();
 #endif

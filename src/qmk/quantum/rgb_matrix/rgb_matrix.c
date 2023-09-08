@@ -104,7 +104,7 @@ void rgb_matrix_task(void) {
             rgb_task_state = SYNCING;
             break;
         case SYNCING:
-            if (timer_elapsed32(g_rgb_timer) >= 16) rgb_task_state = STARTING;
+            if (timer_elapsed32(g_rgb_timer) >= 50) rgb_task_state = STARTING;
             break;
     }
 }

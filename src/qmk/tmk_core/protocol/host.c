@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../quantum/keyboard.h"
 #include "../../quantum/keycode.h"
 #include "host.h"
-#include "../../../ch55xduino/USBHID.h"
 
 #ifdef EXTRAKEY_ENABLE
 static __xdata uint16_t last_system_usage   = 0;

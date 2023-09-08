@@ -12,6 +12,7 @@
 
 volatile __xdata uint8_t UpPoint1_Busy  = 0;   //Flag of whether upload pointer is busy
 volatile __xdata uint8_t UpPoint2_Busy = 0;
+volatile __data uint8_t raw_hid_receive_flag = false;
 
 static __data uint8_t statusLED = 0;
 
@@ -65,7 +66,15 @@ void USB_EP2_IN() {
 void USB_EP2_OUT() {
     if (U_TOG_OK) // Discard unsynchronized packets
     {
-        raw_hid_receive(Ep2Buffer, 32);
+        raw_hid_receive_flag = true;   
+    }
+}
+
+void raw_hid_task() {
+    if (raw_hid_receive_flag)
+    {
+        raw_hid_receive(Ep2Buffer, EP2_SIZE);
+        raw_hid_receive_flag = false;
     }
 }
 
