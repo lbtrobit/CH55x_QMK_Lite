@@ -17,9 +17,12 @@
 #pragma once
 
 #include "action.h"
+#include "quantum.h"
 
 #define VIA_MAGIC_CODE                      0x5A
 #define VIA_EEPROM_MAGIC_ADDR               0
+
+#define VIA_EEPROM_SAVE_INTERVAL            500
 
 // The end of the EEPROM memory used by VIA
 // By default, dynamic keymaps will start at this if there is no
@@ -29,7 +32,17 @@
 #define VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR   VIA_EEPROM_CUSTOM_CONFIG_ADDR
 #define VIA_EEPROM_CUSTOM_MACRO_LOOP_SIZE   5
 
+#ifdef RGB_MATRIX_ENABLE
+#define VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR   (VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + VIA_EEPROM_CUSTOM_MACRO_LOOP_SIZE)
+# ifdef RGB_EFFECTS_ENABLE
+# define VIA_EEPROM_CUSTOM_RGB_MATRIX_SIZE   12
+# else  
+# define VIA_EEPROM_CUSTOM_RGB_MATRIX_SIZE   4
+# endif // RGB_EFFECTS_ENABLE
+#define VIA_EEPROM_CUSTOM_CONFIG_SIZE       VIA_EEPROM_CUSTOM_MACRO_LOOP_SIZE + VIA_EEPROM_CUSTOM_RGB_MATRIX_SIZE
+#else
 #define VIA_EEPROM_CUSTOM_CONFIG_SIZE       VIA_EEPROM_CUSTOM_MACRO_LOOP_SIZE
+#endif // RGB_MATRIX_ENABLE
 
 #define VIA_EEPROM_CONFIG_END               (VIA_EEPROM_CUSTOM_CONFIG_ADDR + VIA_EEPROM_CUSTOM_CONFIG_SIZE)
 
@@ -60,6 +73,29 @@ enum via_command_id {
     id_dynamic_keymap_get_encoder           = 0x14,
     id_dynamic_keymap_set_encoder           = 0x15,
     id_unhandled                            = 0xFF,
+
+    id_signalrgb_qmk_version                = 0x21,
+    id_signalrgb_protocol_version           = 0x22,
+    id_signalrgb_unique_identifier          = 0x23,
+    id_signalrgb_stream_leds                = 0x24,
+    id_signalrgb_effect_enable              = 0x25,
+    id_signalrgb_effect_disable             = 0x26,
+    id_signalrgb_get_total_leds             = 0x27,
+    id_signalrgb_get_firmware_type          = 0x28,
+};
+
+enum signalrgb_responses {
+    PROTOCOL_VERSION_BYTE_1 = 1,
+    PROTOCOL_VERSION_BYTE_2 = 0,
+    PROTOCOL_VERSION_BYTE_3 = 4,
+    QMK_VERSION_BYTE_1 = 0,
+    QMK_VERSION_BYTE_2 = 21,
+    QMK_VERSION_BYTE_3 = 6,
+    DEVICE_UNIQUE_IDENTIFIER_BYTE_1 = 0,
+    DEVICE_UNIQUE_IDENTIFIER_BYTE_2 = 0,
+    DEVICE_UNIQUE_IDENTIFIER_BYTE_3 = 0,
+    FIRMWARE_TYPE_BYTE = 2, 
+    DEVICE_ERROR_LEDS = 254,
 };
 
 enum via_keyboard_value_id {
@@ -78,6 +114,7 @@ enum via_channel_id {
     id_qmk_audio_channel      = 4,
 
     id_qmk_macro_loop_channel = 5,
+    id_qmk_macro_system       = 6,
 };
 
 enum via_qmk_rgb_matrix_value {
@@ -85,6 +122,10 @@ enum via_qmk_rgb_matrix_value {
     id_qmk_rgb_matrix_effect       = 2,
     id_qmk_rgb_matrix_effect_speed = 3,
     id_qmk_rgb_matrix_color        = 4,
+
+    id_qmk_rgb_matrix_color_red    = 5,
+    id_qmk_rgb_matrix_color_green  = 6,
+    id_qmk_rgb_matrix_color_blue   = 7,
 };
 
 enum via_qmk_macro_loop_value {
@@ -93,6 +134,11 @@ enum via_qmk_macro_loop_value {
     id_qmk_macro_loop_m2    = 3,
     id_qmk_macro_loop_m3    = 4,
     id_qmk_macro_loop_m4    = 5,
+};
+
+enum id_qmk_macro_system_value {
+    id_system_eeprom_reset    = 1,
+    id_system_bootloader_jump = 2,
 };
 
 // Called by QMK core to initialize dynamic keymaps etc.

@@ -145,7 +145,6 @@ typedef union {
     };
 } report_keyboard_t;
 
-#ifdef EXTRAKEY_ENABLE
 typedef struct {
     uint8_t  report_id;
     uint16_t usage;
@@ -161,7 +160,6 @@ typedef struct {
 
 uint16_t report_keycode_to_system(uint8_t key);
 uint16_t report_keycode_to_consumer(uint8_t key);
-#endif
 
 bool is_key_pressed(report_keyboard_t* keyboard_report, uint8_t key);
 void add_key_to_report(report_keyboard_t* keyboard_report, uint8_t key);

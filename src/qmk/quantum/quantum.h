@@ -38,4 +38,8 @@
 #    include "encoder.h"
 #endif
 
+#ifdef RGB_MATRIX_ENABLE
+#    include "rgb_matrix/rgb_matrix.h"
+#endif
+
 void usb_send_for_debug(uint8_t v1, uint8_t v2);

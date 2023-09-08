@@ -19,6 +19,8 @@
 #include "dynamic_keymap.h"
 #include <Arduino.h>
 
+static __data uint16_t eeprom_save_interval;
+
 // Called by QMK core to initialize dynamic keymaps etc.
 void via_init(void) {
     // If the EEPROM has the magic, the data is good.
@@ -33,8 +35,20 @@ void eeconfig_init_via(void) {
     dynamic_keymap_reset();
     // This resets the macros in EEPROM to nothing.
     dynamic_macro_reset();
+#ifdef RGB_MATRIX_ENABLE
+    // This resets the RGB Matrix settings in EEPROM to nothing.
+    rgb_matrix_reset();
+#endif //RGB_MATRIX_ENABLE
     // Save the magic number last, in case saving was interrupted
     eeprom_write_byte(VIA_EEPROM_MAGIC_ADDR, VIA_MAGIC_CODE);
+}
+
+void bootloader_jump(void) {
+    USB_CTRL = 0;
+    EA = 0;	        // Disabling all interrupts is required.
+    TMOD = 0;
+    __asm__ ("lcall #0x3800"); // Jump to bootloader code
+    while (1);
 }
 
 // Called by QMK core to process VIA-specific keycodes.
@@ -54,29 +68,69 @@ void via_custom_value_command(uint8_t *data) {
     // data = [ command_id, channel_id, value_id, value_data ]
     uint8_t *command_id = &(data[0]);
     uint8_t *channel_id = &(data[1]);
-    uint8_t *value_id_and_data = &(data[2]);
+    uint8_t *value_id = &(data[2]);
+    uint8_t *value_data = &(data[3]);
 
     if (*channel_id == id_qmk_macro_loop_channel) {
         switch (*command_id) {
-            case id_custom_set_value: {
-                eeprom_write_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + data[2] - 1, data[3]);
+            case id_custom_set_value:
+            case id_custom_save:
+                eeprom_write_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + *value_id - 1, *value_data);
                 break;
+            case id_custom_get_value:
+                *value_data = eeprom_read_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + *value_id - 1);
+                break;
+        }
+        return;
+    } else if (*channel_id == id_qmk_macro_system) {
+        switch (*command_id) {
+            case id_custom_set_value:
+            case id_custom_save:
+                switch (*value_id) {
+                    case id_system_eeprom_reset:
+                        eeconfig_init_via();
+                        break;
+                    case id_system_bootloader_jump:
+                        bootloader_jump();
+                        break;
+                }
+                break;
+            case id_custom_get_value:
+                *value_data = 0;
+                break;
+        }
+        return;
+    }
+#ifdef RGB_MATRIX_ENABLE 
+    else if (*channel_id == id_qmk_rgb_matrix_channel) {
+        if (*value_id == id_qmk_rgb_matrix_effect) {
+            switch (*command_id) {
+                case id_custom_set_value:
+                case id_custom_save:
+                    rgb_matrix_set_mode(*value_data);
+                    break;
+                case id_custom_get_value:
+                    *value_data = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_EFFECT);
+                    break;
             }
-            case id_custom_get_value: {
-                data[3] = eeprom_read_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + data[2] - 1);
-                break;
-            }
-            case id_custom_save: {
-                eeprom_write_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + data[2] - 1, data[3]);
-                break;
-            }
-            default: {
-                *command_id = id_unhandled;
-                break;
+        } else if (*value_id >= id_qmk_rgb_matrix_color_red && *value_id <= id_qmk_rgb_matrix_color_blue) {
+            switch (*command_id) {
+                case id_custom_set_value:
+                case id_custom_save:
+                    if (timer_elapsed32(eeprom_save_interval) >= VIA_EEPROM_SAVE_INTERVAL) {
+                        eeprom_write_byte(VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR + *value_id - 5, *value_data);
+                        rgb_matrix_effects_init();
+                        eeprom_save_interval = timer_read();
+                    }
+                    break;
+                case id_custom_get_value:
+                    *value_data = eeprom_read_byte(VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR + *value_id - 5);
+                    break;
             }
         }
         return;
     }
+#endif //RGB_MATRIX_ENABLE
 
     *command_id = id_unhandled;
 }
@@ -86,6 +140,51 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
     uint8_t *command_data = &(data[1]);
 
     switch (*command_id) {
+#ifdef RGB_MATRIX_ENABLE
+        case id_signalrgb_stream_leds: {
+            rgb_matrix_signalrgb_set_leds(data);
+            break;
+        }
+        case id_signalrgb_qmk_version: {
+            command_data[0] = id_signalrgb_qmk_version;
+            command_data[1] = QMK_VERSION_BYTE_1;
+            command_data[2] = QMK_VERSION_BYTE_2;
+            command_data[3] = QMK_VERSION_BYTE_3;
+            break;
+        }
+        case id_signalrgb_protocol_version: {
+            command_data[0] = id_signalrgb_protocol_version;
+            command_data[1] = PROTOCOL_VERSION_BYTE_1;
+            command_data[2] = PROTOCOL_VERSION_BYTE_2;
+            command_data[3] = PROTOCOL_VERSION_BYTE_3;
+            break;
+        }
+        case id_signalrgb_unique_identifier: {
+            command_data[0] = id_signalrgb_unique_identifier;
+            command_data[1] = DEVICE_UNIQUE_IDENTIFIER_BYTE_1;
+            command_data[2] = DEVICE_UNIQUE_IDENTIFIER_BYTE_2;
+            command_data[3] = DEVICE_UNIQUE_IDENTIFIER_BYTE_3;
+            break;
+        }
+        case id_signalrgb_effect_enable: {
+            rgb_matrix_set_mode(RGB_MATRIX_SIGNAL_RGB);
+            break;
+        }
+        case id_signalrgb_effect_disable: {
+            rgb_matrix_init();
+            break;
+        }
+        case id_signalrgb_get_total_leds: {
+            command_data[0] = id_signalrgb_get_total_leds;
+            command_data[1] = RGB_MATRIX_LED_COUNT;
+            break;
+        }
+        case id_signalrgb_get_firmware_type: {
+            command_data[0] = id_signalrgb_get_firmware_type;
+            command_data[1] = FIRMWARE_TYPE_BYTE;
+            break;
+        }
+#endif
         case id_get_protocol_version: {
             command_data[0] = VIA_PROTOCOL_VERSION >> 8;
             command_data[1] = VIA_PROTOCOL_VERSION & 0xFF;
@@ -114,7 +213,7 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
             via_custom_value_command(data);
             break;
         case id_eeprom_reset:
-            eeconfig_init_via();
+        case id_bootloader_jump:
             break;
         case id_dynamic_keymap_macro_get_count: {
             command_data[0] = DYNAMIC_KEYMAP_MACRO_COUNT;

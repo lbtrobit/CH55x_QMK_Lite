@@ -29,6 +29,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    include "encoder.h"
 #endif
 
+#ifdef RGB_MATRIX_ENABLE
+#    include "rgb_matrix/rgb_matrix.h"
+#endif
+
 /** \brief keyboard_init
  *
  * FIXME: needs doc
@@ -42,6 +46,9 @@ void keyboard_init(void) {
     via_init();
 #ifdef ENCODER_ENABLE
     encoder_init();
+#endif
+#ifdef RGB_MATRIX_ENABLE
+    rgb_matrix_init();
 #endif   
 }
 
@@ -114,5 +121,9 @@ void keyboard_task(void) {
 
 #ifdef LED_ENABLE
     led_task();
+#endif
+
+#ifdef RGB_MATRIX_ENABLE
+    rgb_matrix_task();
 #endif
 }

@@ -25,6 +25,12 @@
 #define ENCODERS_PAD_A  { 12 }  //编码器A引脚
 #define ENCODERS_PAD_B  { 13 }  //编码器B引脚
 
+#define RGB_MATRIX_ENABLE       //开启RGB灯效，开启后默认开启via设置固定RGB和signalrgb
+#define WS2812_DI_PIN 15        //RGB灯数据引脚
+#define RGB_MATRIX_LED_COUNT 17 //RGB灯数量
+
+// #define RGB_EFFECTS_ENABLE      //开启RGB本地拓展特效，下面的灯效需先开启这个宏，占用较多空间
+
 
 
 
