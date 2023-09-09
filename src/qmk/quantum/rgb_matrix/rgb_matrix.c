@@ -146,16 +146,17 @@ void rgb_matrix_set_speed(__data uint8_t speed) {
 void rgb_matrix_reset(void)
 {
     // reset eeprom rgb data
-    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_RED, 0x20);
-    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_GREEN, 0x20);
+    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_RED, 0x00);
+    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_GREEN, 0x80);
     eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_BLUE, 0x80);
-    // reset eeprom rgb mode
-    rgb_matrix_set_mode(RGB_MATRIX_NONE);
 
 #ifdef RGB_EFFECTS_PLUS
-    rgb_matrix_set_hs(10, 100);
-    rgb_matrix_set_val(100);
-    rgb_matrix_set_speed(100);
+    rgb_matrix_set_hs(10, 255);
+    rgb_matrix_set_val(150);
+    rgb_matrix_set_speed(50);
+    rgb_matrix_set_mode(RGB_MATRIX_CYCLE_ALL);
+#else
+    rgb_matrix_set_mode(RGB_MATRIX_SOLID_RGB);
 #endif // RGB_EFFECTS_ENABLE
 }
 

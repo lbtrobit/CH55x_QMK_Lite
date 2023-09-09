@@ -1,0 +1,163 @@
+{
+  "name": "KeyKey",
+  "vendorId": "0x5262",
+  "productId": "0x4B4B",
+  "matrix": {"rows": 1, "cols": 2},
+  "layouts": {
+    "keymap": [
+      ["0,0", "0,1"]
+    ]
+  },
+  "menus": [
+    {
+      "label": "Lighting",
+      "content": [
+        {
+          "label": "Backlight",
+          "content": [
+            {
+              "label": "Effect",
+              "type": "dropdown",
+              "content": ["id_qmk_rgb_matrix_effect", 3, 2],
+              "options": [
+                "All Off",
+                "Solid RGB",
+                "SignalRGB",
+                "Cycle All",
+                "Cycle Left/Right",
+                "Cycle Up/Down",
+                "Rainbow Moving Chevron"
+              ]
+            },
+            {
+              "showIf": "{id_qmk_rgb_matrix_effect} != 0 && {id_qmk_rgb_matrix_effect} != 1 && {id_qmk_rgb_matrix_effect} != 2 ",
+              "label": "Brightness",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_rgb_matrix_brightness", 3, 1]
+            },
+            {  
+              "showIf": "{id_qmk_rgb_matrix_effect} != 0 && {id_qmk_rgb_matrix_effect} != 1 && {id_qmk_rgb_matrix_effect} != 2 ",
+              "label": "Effect Speed",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_rgb_matrix_effect_speed", 3, 3]
+            },
+            {
+              "showIf": "{id_qmk_rgb_matrix_effect} != 0 && {id_qmk_rgb_matrix_effect} != 1 && {id_qmk_rgb_matrix_effect} != 2 ",
+              "label": "Color",
+              "type": "color",
+              "content": ["id_qmk_rgb_matrix_color", 3, 4]
+            },
+            {
+              "showIf": "{id_qmk_rgb_matrix_effect} == 1",
+              "label": "Red",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_rgb_matrix_color_red", 3, 5]
+            },
+            {
+              "showIf": "{id_qmk_rgb_matrix_effect} == 1",
+              "label": "Green",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_rgb_matrix_color_green", 3, 6]
+            },
+            {
+              "showIf": "{id_qmk_rgb_matrix_effect} == 1",
+              "label": "Blue",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_rgb_matrix_color_blue", 3, 7]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "\u5b8f\u5faa\u73af",
+      "content": [
+        {
+          "label": " M0 ",
+          "content": [
+            {
+              "label": "\u5b8f\u5faa\u73af\u0030\u002d\u0032\u0035\u0035\u6b21\uff0c\u6700\u5927\u503c\u65f6\u4e3a\u65e0\u9650\u5faa\u73af\uff0c\u518d\u6b21\u6309\u5b8f\u505c\u6b62",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m0", 5, 1]
+            }
+          ]
+        },
+        {
+          "label": " M1 ",
+          "content": [
+            {
+              "label": "\u5b8f\u5faa\u73af\u0030\u002d\u0032\u0035\u0035\u6b21\uff0c\u6700\u5927\u503c\u65f6\u4e3a\u65e0\u9650\u5faa\u73af\uff0c\u518d\u6b21\u6309\u5b8f\u505c\u6b62",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m1", 5, 2]
+            }
+          ]
+        },
+        {
+          "label": " M2 ",
+          "content": [
+            {
+              "label": "\u5b8f\u5faa\u73af\u0030\u002d\u0032\u0035\u0035\u6b21\uff0c\u6700\u5927\u503c\u65f6\u4e3a\u65e0\u9650\u5faa\u73af\uff0c\u518d\u6b21\u6309\u5b8f\u505c\u6b62",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m2", 5, 3]
+            }
+          ]
+        },
+        {
+          "label": " M3 ",
+          "content": [
+            {
+              "label": "\u5b8f\u5faa\u73af\u0030\u002d\u0032\u0035\u0035\u6b21\uff0c\u6700\u5927\u503c\u65f6\u4e3a\u65e0\u9650\u5faa\u73af\uff0c\u518d\u6b21\u6309\u5b8f\u505c\u6b62",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m3", 5, 4]
+            }
+          ]
+        },
+        {
+          "label": " M4 ",
+          "content": [
+            {
+              "label": "\u5b8f\u5faa\u73af\u0030\u002d\u0032\u0035\u0035\u6b21\uff0c\u6700\u5927\u503c\u65f6\u4e3a\u65e0\u9650\u5faa\u73af\uff0c\u518d\u6b21\u6309\u5b8f\u505c\u6b62",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m4", 5, 5]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "\u7cfb\u7edf\u8bbe\u7f6e",
+      "content": [
+        {
+          "label": "\u51fa\u5382\u8bbe\u7f6e",
+          "content": [
+            {
+              "label": "\u6062\u590d\u51fa\u5382\u8bbe\u7f6e",
+              "type": "toggle",
+              "content": ["id_system_eeprom_reset", 6, 1]
+            }
+          ]
+        },
+        {
+          "label": "\u5347\u7ea7",
+          "content": [
+            {
+              "label": "\u8fdb\u5165\u5347\u7ea7\u6a21\u5f0f",
+              "type": "toggle",
+              "content": ["id_system_bootloader_jump", 6, 2]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
