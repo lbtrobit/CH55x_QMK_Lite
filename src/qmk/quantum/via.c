@@ -19,7 +19,7 @@
 #include "dynamic_keymap.h"
 #include <Arduino.h>
 
-static __data uint16_t eeprom_save_interval;
+static uint16_t eeprom_save_interval;
 
 // Called by QMK core to initialize dynamic keymaps etc.
 void via_init(void) {
@@ -64,6 +64,71 @@ bool process_record_via(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
+#ifdef RGB_MATRIX_ENABLE 
+void via_qmk_rgb_matrix_command(uint8_t *data)
+{
+    // data = [ command_id, channel_id, value_id, value_data ]
+    uint8_t *command_id = &(data[0]);
+    uint8_t *channel_id = &(data[1]);
+    uint8_t *value_id = &(data[2]);
+    uint8_t *value_data = &(data[3]);
+
+    switch (*command_id) {
+        case id_custom_set_value:
+        case id_custom_save:
+            if (timer_elapsed32(eeprom_save_interval) >= VIA_EEPROM_SAVE_INTERVAL) {
+                switch (*value_id) {
+                    case id_qmk_rgb_matrix_effect:
+                        rgb_matrix_set_mode(*value_data);
+                        break;
+#   ifdef RGB_EFFECTS_PLUS
+                    case id_qmk_rgb_matrix_brightness:
+                        rgb_matrix_set_val(*value_data);
+                        break;
+                    case id_qmk_rgb_matrix_effect_speed:
+                        rgb_matrix_set_speed(*value_data);
+                        break;
+                    case id_qmk_rgb_matrix_color:
+                        rgb_matrix_set_hs(*value_data, *(value_data + 1));
+                        break;
+#   endif //RGB_EFFECTS_PLUS
+                    default:
+                        if (*value_id >= id_qmk_rgb_matrix_color_red && *value_id <= id_qmk_rgb_matrix_color_blue) {
+                            eeprom_write_byte(VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR + *value_id - 5, *value_data);
+                            rgb_matrix_effects_init();
+                        }
+                        break;
+                }
+                eeprom_save_interval = timer_read();
+            }
+            break;
+
+        case id_custom_get_value:
+            switch (*value_id) {
+                case id_qmk_rgb_matrix_effect:
+                    *value_data = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_EFFECT);
+                    break;
+#   ifdef RGB_EFFECTS_PLUS
+                case id_qmk_rgb_matrix_brightness:
+                    *value_data = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_VAL);
+                    break;
+                case id_qmk_rgb_matrix_effect_speed:
+                    *value_data = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_SPEED);
+                    break;
+                case id_qmk_rgb_matrix_color:
+                    break;
+#   endif //RGB_EFFECTS_PLUS
+                default:
+                    if (*value_id >= id_qmk_rgb_matrix_color_red && *value_id <= id_qmk_rgb_matrix_color_blue) {
+                        *value_data = eeprom_read_byte(VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR + *value_id - 5);
+                    }
+                    break;
+            }
+            break;
+    }
+}
+#endif //RGB_MATRIX_ENABLE
+
 void via_custom_value_command(uint8_t *data) {
     // data = [ command_id, channel_id, value_id, value_data ]
     uint8_t *command_id = &(data[0]);
@@ -103,31 +168,7 @@ void via_custom_value_command(uint8_t *data) {
     }
 #ifdef RGB_MATRIX_ENABLE 
     else if (*channel_id == id_qmk_rgb_matrix_channel) {
-        if (*value_id == id_qmk_rgb_matrix_effect) {
-            switch (*command_id) {
-                case id_custom_set_value:
-                case id_custom_save:
-                    rgb_matrix_set_mode(*value_data);
-                    break;
-                case id_custom_get_value:
-                    *value_data = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_EFFECT);
-                    break;
-            }
-        } else if (*value_id >= id_qmk_rgb_matrix_color_red && *value_id <= id_qmk_rgb_matrix_color_blue) {
-            switch (*command_id) {
-                case id_custom_set_value:
-                case id_custom_save:
-                    if (timer_elapsed32(eeprom_save_interval) >= VIA_EEPROM_SAVE_INTERVAL) {
-                        eeprom_write_byte(VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR + *value_id - 5, *value_data);
-                        rgb_matrix_effects_init();
-                        eeprom_save_interval = timer_read();
-                    }
-                    break;
-                case id_custom_get_value:
-                    *value_data = eeprom_read_byte(VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR + *value_id - 5);
-                    break;
-            }
-        }
+        via_qmk_rgb_matrix_command(data);
         return;
     }
 #endif //RGB_MATRIX_ENABLE

@@ -28,7 +28,6 @@ typedef enum rgb_task_states {
 } rgb_task_states;
 
 typedef struct {
-    uint8_t flags;
     bool    init;
 } effect_params_t;
 
@@ -51,7 +50,6 @@ typedef struct {
 typedef struct {
     uint8_t     matrix_co[MATRIX_ROWS][MATRIX_COLS];
     led_point_t point[RGB_MATRIX_LED_COUNT];
-    uint8_t     flags[RGB_MATRIX_LED_COUNT];
 } led_config_t;
 
 typedef union {
@@ -60,6 +58,5 @@ typedef union {
         uint8_t     mode;
         HSV         hsv;
         uint8_t     speed;
-        uint8_t     flags;
     };
 } rgb_config_t;

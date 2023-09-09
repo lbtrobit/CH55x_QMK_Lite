@@ -18,23 +18,28 @@
 
 #include "rgb_matrix.h"
 #include "../../platforms/progmem.h"
+#include "rgb_matrix_animations.h"
 #include <stdint.h>
 #include <string.h>
 
 #ifdef RGB_MATRIX_ENABLE
 
-// globals
-# ifdef RGB_EFFECTS_ENABLE
-__xdata led_config_t g_led_config = RGB_CONFIG
-# endif // RGB_EFFECTS_ENABLE
+#ifdef RGB_EFFECTS_PLUS
+# ifndef RGB_MATRIX_CENTER
+const led_point_t k_rgb_matrix_center = {112, 32};
+# else
+const led_point_t k_rgb_matrix_center = RGB_MATRIX_CENTER;
+# endif
+const led_config_t g_led_config = RGB_CONFIG
+#endif // RGB_EFFECTS_PLUS
 
 __idata rgb_config_t rgb_matrix_config;
+__idata uint32_t g_rgb_timer;
 
 // internals
 static __data uint32_t          rgb_timer_buffer;
-static __data uint32_t          g_rgb_timer;
 static __data uint8_t           rgb_last_effect   = UINT8_MAX;
-static __data effect_params_t   rgb_effect_params = {LED_FLAG_ALL, false};
+static __data effect_params_t   rgb_effect_params = {false};
 static __data rgb_task_states   rgb_task_state = SYNCING;
 
 
@@ -48,16 +53,7 @@ static void rgb_task_start(void) {
 static void rgb_task_render(uint8_t effect) {
     bool rendering         = false;
 
-    if (!rgb_effect_params.init) {
-        rgb_effect_params.init = (effect != rgb_last_effect);
-    } 
-
-#ifdef RGB_EFFECTS_ENABLE
-    if (rgb_effect_params.flags != rgb_matrix_config.flags) {
-        rgb_effect_params.flags = rgb_matrix_config.flags;
-        ws2812_set_color_all(0, 0, 0);
-    }
-#endif // RGB_EFFECTS_ENABLE
+    rgb_effect_params.init = (effect != rgb_last_effect);
 
     // each effect can opt to do calculations
     // and/or request PWM buffer updates.
@@ -67,11 +63,19 @@ static void rgb_task_render(uint8_t effect) {
             break;
 
         case RGB_MATRIX_SOLID_RGB:
-            rendering = rgb_matrix_SOLID_RGB(&rgb_effect_params);
+            rendering = rgb_matrix_SOLID_RGB();
             break;
 
         case RGB_MATRIX_SIGNAL_RGB:
             rendering = rgb_matrix_SIGNAL_RGB();
+            break;
+
+        default:
+ #ifdef RGB_EFFECTS_PLUS
+            if (effect >= RGB_MATRIX_CYCLE_ALL && effect < RGB_MATRIX_EFFECT_MAX) {
+                rendering = rgb_matrix_effect_plus();
+            }
+#endif // RGB_EFFECTS_PLUS
             break;
     }
 
@@ -104,9 +108,14 @@ void rgb_matrix_task(void) {
             rgb_task_state = SYNCING;
             break;
         case SYNCING:
-            if (timer_elapsed32(g_rgb_timer) >= 50) rgb_task_state = STARTING;
+            if (timer_elapsed32(g_rgb_timer) >= 20) rgb_task_state = STARTING;
             break;
     }
+}
+
+void rgb_matrix_effects_init(void)
+{
+    rgb_effect_params.init = true;
 }
 
 void rgb_matrix_set_mode(__data uint8_t mode) {
@@ -115,10 +124,24 @@ void rgb_matrix_set_mode(__data uint8_t mode) {
     eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_EFFECT, rgb_matrix_config.mode);
 }
 
-void rgb_matrix_effects_init(void)
-{
-    rgb_effect_params.init = true;
+#ifdef RGB_EFFECTS_PLUS
+void rgb_matrix_set_hs(__data uint8_t hue, __data uint8_t sat) {
+    rgb_matrix_config.hsv.h  = hue;
+    rgb_matrix_config.hsv.s  = sat;
+    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_HUE, rgb_matrix_config.hsv.h);
+    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_SAT, rgb_matrix_config.hsv.s);
 }
+
+void rgb_matrix_set_val(__data uint8_t val) {
+    rgb_matrix_config.hsv.v  = val;
+    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_VAL, rgb_matrix_config.hsv.v);
+}
+
+void rgb_matrix_set_speed(__data uint8_t speed) {
+    rgb_matrix_config.speed  = speed;
+    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_SPEED, rgb_matrix_config.speed);
+}
+#endif // RGB_EFFECTS_ENABLE
 
 void rgb_matrix_reset(void)
 {
@@ -129,12 +152,10 @@ void rgb_matrix_reset(void)
     // reset eeprom rgb mode
     rgb_matrix_set_mode(RGB_MATRIX_NONE);
 
-#ifdef RGB_EFFECTS_ENABLE
-    rgb_matrix_config.hsv.h  = 10;
-    rgb_matrix_config.hsv.s  = 100;
-    rgb_matrix_config.hsv.v  = 255;
-    rgb_matrix_config.speed  = 125;
-    rgb_matrix_config.flags  = LED_FLAG_ALL;
+#ifdef RGB_EFFECTS_PLUS
+    rgb_matrix_set_hs(10, 100);
+    rgb_matrix_set_val(100);
+    rgb_matrix_set_speed(100);
 #endif // RGB_EFFECTS_ENABLE
 }
 
@@ -143,13 +164,12 @@ void rgb_matrix_init(void) {
 
     rgb_matrix_config.mode   = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_EFFECT);
 
-#ifdef RGB_EFFECTS_ENABLE
-    rgb_matrix_config.hsv.h  = 10;
-    rgb_matrix_config.hsv.s  = 100;
-    rgb_matrix_config.hsv.v  = 255;
-    rgb_matrix_config.speed  = 125;
-    rgb_matrix_config.flags  = LED_FLAG_ALL;
-#endif // RGB_EFFECTS_ENABLE
+#ifdef RGB_EFFECTS_PLUS
+    rgb_matrix_config.hsv.h  = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_HUE);
+    rgb_matrix_config.hsv.s  = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_SAT);
+    rgb_matrix_config.hsv.v  = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_VAL);
+    rgb_matrix_config.speed  = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_SPEED);
+#endif // RGB_EFFECTS_PLUS
 }
 
 bool rgb_matrix_none(effect_params_t *params) {
@@ -161,13 +181,9 @@ bool rgb_matrix_none(effect_params_t *params) {
     return false;
 }
 
-bool rgb_matrix_SOLID_RGB(effect_params_t* params)
+bool rgb_matrix_SOLID_RGB(void)
 {
-    if (!params->init) {
-        return false;
-    }
-
-    __data LED_TYPE color;
+    LED_TYPE color;
     color.r = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_RED);
     color.g = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_GREEN);
     color.b = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_BLUE);

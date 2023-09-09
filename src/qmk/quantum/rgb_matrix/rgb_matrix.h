@@ -28,6 +28,12 @@ enum rgb_matrix_effects {
     RGB_MATRIX_NONE = 0,
     RGB_MATRIX_SOLID_RGB, // via set Solid RGB 
     RGB_MATRIX_SIGNAL_RGB,
+#ifdef RGB_EFFECTS_PLUS
+    RGB_MATRIX_CYCLE_ALL,
+    RGB_MATRIX_CYCLE_LEFT_RIGHT,
+    RGB_MATRIX_CYCLE_UP_DOWN,
+    RGB_MATRIX_RAINBOW_MOVING_CHEVRON,
+#endif
     RGB_MATRIX_EFFECT_MAX
 };
 
@@ -38,15 +44,16 @@ enum rgb_matrix_eeprom_offset {
     RGB_MATRIX_EEPROM_ADDR_GREEN,
     RGB_MATRIX_EEPROM_ADDR_BLUE,
     RGB_MATRIX_EEPROM_ADDR_EFFECT,
+    RGB_MATRIX_EEPROM_ADDR_HUE,
+    RGB_MATRIX_EEPROM_ADDR_SAT,
+    RGB_MATRIX_EEPROM_ADDR_VAL,
+    RGB_MATRIX_EEPROM_ADDR_SPEED,
 };
 #endif
 
 bool rgb_matrix_none(effect_params_t *params);
-bool rgb_matrix_SOLID_RGB(effect_params_t* params);
+bool rgb_matrix_SOLID_RGB(void);
 bool rgb_matrix_SIGNAL_RGB(void);
-
-#define RGB_MATRIX_USE_LIMITS(min, max)             uint8_t min = 0; uint8_t max = RGB_MATRIX_LED_COUNT;
-#define RGB_MATRIX_TEST_LED_FLAGS()                 if (!HAS_ANY_FLAGS(g_led_config.flags[i], params->flags)) continue
 
 void rgb_matrix_init(void);
 void rgb_matrix_task(void);
@@ -54,6 +61,9 @@ void rgb_matrix_reset(void);
 void rgb_matrix_signalrgb_set_leds(uint8_t *data);
 void rgb_matrix_set_mode(__data uint8_t mode);
 void rgb_matrix_effects_init(void);
+void rgb_matrix_set_hs(__data uint8_t hue, __data uint8_t sat);
+void rgb_matrix_set_val(__data uint8_t val);
+void rgb_matrix_set_speed(__data uint8_t speed);
 
 void ws2812_init(void);
 void ws2812_set_color(__data int index, __data uint8_t red, __data uint8_t green, __data uint8_t blue);
@@ -62,6 +72,8 @@ void ws2812_flush(void);
 
 // LED color buffer
 extern __xdata LED_TYPE rgb_matrix_ws2812_array[RGB_MATRIX_LED_COUNT];
-extern __xdata led_config_t g_led_config;
+extern const led_point_t k_rgb_matrix_center;
+extern const led_config_t g_led_config;
 extern __idata rgb_config_t rgb_matrix_config;
+extern __idata uint32_t g_rgb_timer;
 

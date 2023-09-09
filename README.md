@@ -6,7 +6,7 @@
 * via可录制宏，发送字符串，可设置宏循环次数1-254，最大值时255时为无限循环。再次按宏停止，发宏不影响其他按键操作。
 * via里宏设置可输入KC_F13-KC_F21键代替鼠标键。能设置鼠标宏，做鼠标连点器，游戏宏等。
   对应关系：KC_F13->鼠标左键，KC_F14->右键，KC_F15->中键，KC_F16-KC_F19—>指针上下左右，KC_F20->滚轮上滚，KC_F21->滚轮下滚
-* 适配ws2812 RGB，有via设置全键盘灯的RGB值的本地模式，signalrgb神光同步模式，电脑软件直接驱动RGB，支持多种灯效，音乐律动等等。
+* 适配ws2812 RGB，标配via设置RGB值的本地模式，signalrgb神光同步模式，电脑软件直接驱动RGB，支持多种灯效，音乐律动等等。选配4种本地hue颜色循环模式，via可设置。
 * 适配编码器
 
 ### 待更新
@@ -16,7 +16,7 @@
 ### 使用方法
 
 1. 克隆本仓库
-2. 复制keyboards文件夹下RP17并命名为自己的键盘，修改默认键值：`keymap.h`，修改功能配置：`config.h`，修改`***_via.json`文件来适配via，修改`***_signalrgb.json`文件来适配signalrgb，参考https://docs.signalrgb.com/qmk/building-firmware-from-source修改json文件。
+2. 复制keyboards文件夹下RP17并命名为自己的键盘，修改默认键值：`keymap.h`，修改功能配置：`config.h`，修改`***_via.json`文件来适配via，修改`***_signalrgb.js`文件来适配signalrgb，参考[signalrgb](https://docs.signalrgb.com/qmk/building-firmware-from-source)修改js文件。
 3. 修改config_common.h文件的路径为自己键盘的文件路径。
 4. 用Arduino IDE打开修改后的`CH55x_QMK_Lite.ino`文件
 5. 安装[CH55xduino](https://github.com/DeqingSun/ch55xduino)，本项目使用版本0.0.18验证。

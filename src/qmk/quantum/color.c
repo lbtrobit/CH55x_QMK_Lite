@@ -18,7 +18,7 @@
 
 
 #ifdef RGB_MATRIX_ENABLE
-# ifdef RGB_EFFECTS_ENABLE
+# ifdef RGB_EFFECTS_PLUS
 
 RGB hsv_to_rgb(__data HSV hsv) {
     __data RGB rgb;
@@ -36,15 +36,15 @@ RGB hsv_to_rgb(__data HSV hsv) {
     s = hsv.s;
     v = hsv.v;
 
-    region    = h / 43; //h * 6 / 255;
-    remainder = (h - (region * 43)) * 6;    //(h * 2 - region * 85) * 3;
+    region    = h * 6 / 255;
+    remainder = (h * 2 - region * 85) * 3;
 
     uint8_t p = (v * (255 - s)) >> 8;
     uint8_t q = (v * (255 - ((s * remainder) >> 8))) >> 8;
     uint8_t t = (v * (255 - ((s * (255 - remainder)) >> 8))) >> 8;
 
     switch (region) {
-        //case 6:
+        case 6:
         case 0:
             rgb.r = v;
             rgb.g = t;
@@ -80,5 +80,5 @@ RGB hsv_to_rgb(__data HSV hsv) {
     return rgb;
 }
 
-# endif //RGB_EFFECTS_ENABLE
+# endif //RGB_EFFECTS_PLUS
 #endif //RGB_MATRIX_ENABLE

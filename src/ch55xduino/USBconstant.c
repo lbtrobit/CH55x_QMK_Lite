@@ -76,13 +76,13 @@ __code USB_Descriptor_Configuration_t ConfigurationDescriptor = {
                                 .EndpointAddress = 0x82,
                                 .Attributes = (EP_TYPE_INTERRUPT | ENDPOINT_ATTR_NO_SYNC | ENDPOINT_USAGE_DATA),
                                 .EndpointSize = EP2_SIZE,
-                                .PollingIntervalMS = 50
+                                .PollingIntervalMS = 20
     },
     .HID_RawReportOUTEndpoint = {.Header = {.Size = sizeof(USB_Descriptor_Endpoint_t),  .Type = DTYPE_Endpoint},
                                 .EndpointAddress = 0x02,
                                 .Attributes = (EP_TYPE_INTERRUPT | ENDPOINT_ATTR_NO_SYNC | ENDPOINT_USAGE_DATA),
                                 .EndpointSize = EP2_SIZE,
-                                .PollingIntervalMS = 50
+                                .PollingIntervalMS = 20
     },
 };
 
