@@ -95,7 +95,6 @@ void via_qmk_rgb_matrix_command(uint8_t *data)
                     default:
                         if (*value_id >= id_qmk_rgb_matrix_color_red && *value_id <= id_qmk_rgb_matrix_color_blue) {
                             eeprom_write_byte(VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR + *value_id - 5, *value_data);
-                            rgb_matrix_effects_init();
                         }
                         break;
                 }
@@ -186,43 +185,12 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
             rgb_matrix_signalrgb_set_leds(data);
             break;
         }
-        case id_signalrgb_qmk_version: {
-            command_data[0] = id_signalrgb_qmk_version;
-            command_data[1] = QMK_VERSION_BYTE_1;
-            command_data[2] = QMK_VERSION_BYTE_2;
-            command_data[3] = QMK_VERSION_BYTE_3;
-            break;
-        }
-        case id_signalrgb_protocol_version: {
-            command_data[0] = id_signalrgb_protocol_version;
-            command_data[1] = PROTOCOL_VERSION_BYTE_1;
-            command_data[2] = PROTOCOL_VERSION_BYTE_2;
-            command_data[3] = PROTOCOL_VERSION_BYTE_3;
-            break;
-        }
-        case id_signalrgb_unique_identifier: {
-            command_data[0] = id_signalrgb_unique_identifier;
-            command_data[1] = DEVICE_UNIQUE_IDENTIFIER_BYTE_1;
-            command_data[2] = DEVICE_UNIQUE_IDENTIFIER_BYTE_2;
-            command_data[3] = DEVICE_UNIQUE_IDENTIFIER_BYTE_3;
-            break;
-        }
         case id_signalrgb_effect_enable: {
-            rgb_matrix_set_mode(RGB_MATRIX_SIGNAL_RGB);
+            rgb_matrix_set_mode_noeeprom(RGB_MATRIX_SIGNAL_RGB);
             break;
         }
         case id_signalrgb_effect_disable: {
-            rgb_matrix_init();
-            break;
-        }
-        case id_signalrgb_get_total_leds: {
-            command_data[0] = id_signalrgb_get_total_leds;
-            command_data[1] = RGB_MATRIX_LED_COUNT;
-            break;
-        }
-        case id_signalrgb_get_firmware_type: {
-            command_data[0] = id_signalrgb_get_firmware_type;
-            command_data[1] = FIRMWARE_TYPE_BYTE;
+            rgb_matrix_reload_mode();
             break;
         }
 #endif

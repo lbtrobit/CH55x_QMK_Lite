@@ -22,8 +22,6 @@ export function ControllableParameters() {
 	];
 }
 
-//Plugin Version: Built for Protocol V1.0.4
-
 const vKeyNames = [
 	"Copy", "Paste"			//2
 ];
@@ -36,12 +34,6 @@ const vKeyPositions = [
 	[0, 0], [1, 0]	//2
 ];
 
-let LEDCount = 0;
-let IsViaKeyboard = false;
-const MainlineQMKFirmware = 1;
-const VIAFirmware = 2;
-const PluginProtocolVersion = "1.0.4";
-
 export function LedNames() {
 	return vKeyNames;
 }
@@ -50,20 +42,10 @@ export function LedPositions() {
 	return vKeyPositions;
 }
 
-export function vKeysArrayCount() {
-	device.log('vKeys ' + vKeys.length);
-	device.log('vKeyNames ' + vKeyNames.length);
-	device.log('vKeyPositions ' + vKeyPositions.length);
-}
-
 export function Initialize() {
-	requestFirmwareType();
-	requestQMKVersion();
-	requestSignalRGBProtocolVersion();
-	requestUniqueIdentifier();
-	requestTotalLeds();
 	effectEnable();
-
+	
+	device.log('Initialize ');
 }
 
 export function Render() {
@@ -71,7 +53,6 @@ export function Render() {
 }
 
 export function Shutdown(SystemSuspending) {
-
 	if(SystemSuspending) {
 		sendColors("#000000"); // Go Dark on System Sleep/Shutdown
 	} else {
@@ -82,151 +63,7 @@ export function Shutdown(SystemSuspending) {
 		}
 	}
 
-	vKeysArrayCount(); // For debugging array counts
-
-}
-
-function commandHandler() {
-	const readCounts = [];
-
-	do {
-		const returnpacket = device.read([0x00], 32, 10);
-		processCommands(returnpacket);
-
-		readCounts.push(device.getLastReadSize());
-
-		// Extra Read to throw away empty packets from Via
-		// Via always sends a second packet with the same Command Id.
-		if(IsViaKeyboard) {
-			device.read([0x00], 32, 10);
-		}
-	}
-	while(device.getLastReadSize() > 0);
-
-}
-
-function processCommands(data) {
-	switch(data[1]) {
-	case 0x21:
-		returnQMKVersion(data);
-		break;
-	case 0x22:
-		returnSignalRGBProtocolVersion(data);
-		break;
-	case 0x23:
-		returnUniqueIdentifier(data);
-		break;
-	case 0x24:
-		sendColors();
-		break;
-	case 0x27:
-		returnTotalLeds(data);
-		break;
-	case 0x28:
-		returnFirmwareType(data);
-		break;
-	}
-}
-
-function requestQMKVersion() //Check the version of QMK Firmware that the keyboard is running
-{
-	device.write([0x00, 0x21], 32);
-	device.pause(30);
-	commandHandler();
-}
-
-function returnQMKVersion(data) {
-	const QMKVersionByte1 = data[2];
-	const QMKVersionByte2 = data[3];
-	const QMKVersionByte3 = data[4];
-	device.log("QMK Version: " + QMKVersionByte1 + "." + QMKVersionByte2 + "." + QMKVersionByte3);
-	device.log("QMK SRGB Plugin Version: "+ Version());
-	device.pause(30);
-}
-
-function requestSignalRGBProtocolVersion() //Grab the version of the SignalRGB Protocol the keyboard is running
-{
-	device.write([0x00, 0x22], 32);
-	device.pause(30);
-	commandHandler();
-}
-
-function returnSignalRGBProtocolVersion(data) {
-	const ProtocolVersionByte1 = data[2];
-	const ProtocolVersionByte2 = data[3];
-	const ProtocolVersionByte3 = data[4];
-
-	const SignalRGBProtocolVersion = ProtocolVersionByte1 + "." + ProtocolVersionByte2 + "." + ProtocolVersionByte3;
-	device.log(`SignalRGB Protocol Version: ${SignalRGBProtocolVersion}`);
-
-
-	if(PluginProtocolVersion !== SignalRGBProtocolVersion) {
-		device.notify("Unsupported Protocol Version: ", `This plugin is intended for SignalRGB Protocol version ${PluginProtocolVersion}. This device is version: ${SignalRGBProtocolVersion}`, 1, "Documentation");
-	}
-
-	device.pause(30);
-}
-
-function requestUniqueIdentifier() //Grab the unique identifier for this keyboard model
-{
-	if(device.write([0x00, 0x23], 32) === -1) {
-		device.notify("Unsupported Firmware: ", `This device is not running SignalRGB-compatible firmware. Click the Open Troubleshooting Docs button to learn more.`, 1, "Documentation");
-	}
-
-	device.pause(30);
-	commandHandler();
-}
-
-
-function returnUniqueIdentifier(data) {
-	const UniqueIdentifierByte1 = data[2];
-	const UniqueIdentifierByte2 = data[3];
-	const UniqueIdentifierByte3 = data[4];
-
-	if(!(UniqueIdentifierByte1 === 0 && UniqueIdentifierByte2 === 0 && UniqueIdentifierByte3 === 0)) {
-		device.log("Unique Device Identifier: " + UniqueIdentifierByte1 + UniqueIdentifierByte2 + UniqueIdentifierByte3);
-	}
-
-	device.pause(30);
-}
-
-function requestTotalLeds() //Calculate total number of LEDs
-{
-	device.write([0x00, 0x27], 32);
-	device.pause(30);
-	commandHandler();
-}
-
-function returnTotalLeds(data) {
-	LEDCount = data[2];
-	device.log("Device Total LED Count: " + LEDCount);
-	device.pause(30);
-}
-
-function requestFirmwareType() {
-	device.write([0x00, 0x28], 32);
-	device.pause(30);
-	commandHandler();
-}
-
-function returnFirmwareType(data) {
-	const FirmwareTypeByte = data[2];
-
-	if(!(FirmwareTypeByte === MainlineQMKFirmware || FirmwareTypeByte === VIAFirmware)) {
-		device.notify("Unsupported Firmware: ", "Click Show Console, and then click on troubleshooting for your keyboard to find out more.", 1, "Documentation");
-	}
-
-	if(FirmwareTypeByte === MainlineQMKFirmware) {
-		IsViaKeyboard = false;
-		device.log("Firmware Type: Mainline");
-	}
-
-	if(FirmwareTypeByte === VIAFirmware) {
-		IsViaKeyboard = true;
-		device.log("Firmware Type: VIA");
-	}
-
-	device.pause(30);
+	device.log('Shutdown');
 }
 
 function effectEnable() //Enable the SignalRGB Effect Mode

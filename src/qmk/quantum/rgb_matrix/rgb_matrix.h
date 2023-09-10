@@ -27,13 +27,14 @@
 enum rgb_matrix_effects {
     RGB_MATRIX_NONE = 0,
     RGB_MATRIX_SOLID_RGB, // via set Solid RGB 
-    RGB_MATRIX_SIGNAL_RGB,
 #ifdef RGB_EFFECTS_PLUS
     RGB_MATRIX_CYCLE_ALL,
     RGB_MATRIX_CYCLE_LEFT_RIGHT,
     RGB_MATRIX_CYCLE_UP_DOWN,
     RGB_MATRIX_RAINBOW_MOVING_CHEVRON,
+    RGB_MATRIX_HUE_WAVE,
 #endif
+    RGB_MATRIX_SIGNAL_RGB,
     RGB_MATRIX_EFFECT_MAX
 };
 
@@ -60,13 +61,14 @@ void rgb_matrix_task(void);
 void rgb_matrix_reset(void);
 void rgb_matrix_signalrgb_set_leds(uint8_t *data);
 void rgb_matrix_set_mode(__data uint8_t mode);
-void rgb_matrix_effects_init(void);
+void rgb_matrix_set_mode_noeeprom(__data uint8_t mode);
+void rgb_matrix_reload_mode(void);
 void rgb_matrix_set_hs(__data uint8_t hue, __data uint8_t sat);
 void rgb_matrix_set_val(__data uint8_t val);
 void rgb_matrix_set_speed(__data uint8_t speed);
 
 void ws2812_init(void);
-void ws2812_set_color(__data int index, __data uint8_t red, __data uint8_t green, __data uint8_t blue);
+void ws2812_set_color(__data uint8_t index, __data uint8_t red, __data uint8_t green, __data uint8_t blue);
 void ws2812_set_color_all(__data uint8_t red, __data uint8_t green, __data uint8_t blue);
 void ws2812_flush(void);
 

@@ -51,6 +51,9 @@ bool rgb_matrix_effect_plus(void) {
             case RGB_MATRIX_RAINBOW_MOVING_CHEVRON:
                 hsv.h = rgb_matrix_config.hsv.h + abs8(g_led_config.point[i].y - k_rgb_matrix_center.y) + (g_led_config.point[i].x - time);
                 break;
+            case RGB_MATRIX_HUE_WAVE:
+                hsv.h = rgb_matrix_config.hsv.h + scale8(abs8(g_led_config.point[i].x - time), 48);
+                break;
         }
         rgb = hsv_to_rgb(hsv);
         ws2812_set_color(i, rgb.r, rgb.g, rgb.b);

@@ -72,7 +72,7 @@ static void rgb_task_render(uint8_t effect) {
 
         default:
  #ifdef RGB_EFFECTS_PLUS
-            if (effect >= RGB_MATRIX_CYCLE_ALL && effect < RGB_MATRIX_EFFECT_MAX) {
+            if (effect >= RGB_MATRIX_CYCLE_ALL && effect < RGB_MATRIX_SIGNAL_RGB) {
                 rendering = rgb_matrix_effect_plus();
             }
 #endif // RGB_EFFECTS_PLUS
@@ -113,15 +113,17 @@ void rgb_matrix_task(void) {
     }
 }
 
-void rgb_matrix_effects_init(void)
-{
-    rgb_effect_params.init = true;
-}
-
 void rgb_matrix_set_mode(__data uint8_t mode) {
-    rgb_effect_params.init = true;
     rgb_matrix_config.mode = mode;
     eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_EFFECT, rgb_matrix_config.mode);
+}
+
+void rgb_matrix_set_mode_noeeprom(__data uint8_t mode) {
+    rgb_matrix_config.mode = mode;
+}
+
+void rgb_matrix_reload_mode(void) {
+    rgb_matrix_config.mode = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_EFFECT);
 }
 
 #ifdef RGB_EFFECTS_PLUS
@@ -152,11 +154,11 @@ void rgb_matrix_reset(void)
 
 #ifdef RGB_EFFECTS_PLUS
     rgb_matrix_set_hs(10, 255);
-    rgb_matrix_set_val(150);
+    rgb_matrix_set_val(100);
     rgb_matrix_set_speed(50);
     rgb_matrix_set_mode(RGB_MATRIX_CYCLE_ALL);
 #else
-    rgb_matrix_set_mode(RGB_MATRIX_SOLID_RGB);
+    rgb_matrix_set_mode(RGB_MATRIX_NONE);
 #endif // RGB_EFFECTS_ENABLE
 }
 
@@ -200,7 +202,7 @@ void rgb_matrix_signalrgb_set_leds(uint8_t *data) {
     uint8_t first_led_index = data[1];
     uint8_t leds_num        = data[2];
 
-    if (leds_num >= 10) {
+    if ((leds_num >= 10) || (rgb_matrix_config.mode != RGB_MATRIX_SIGNAL_RGB)) {
         data[1] = DEVICE_ERROR_LEDS;
         return;
     }

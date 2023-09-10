@@ -1,4 +1,4 @@
 #pragma once
 
-#include "KeyKey/config.h"
-#include "KeyKey/keymap.h"
+#include "RP17/config.h"
+#include "RP17/keymap.h"

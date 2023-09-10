@@ -64,7 +64,7 @@ void ws2812_flush(void) {
 }
 
 // Set an led in the buffer to a color
-void ws2812_set_color(__data int i, __data uint8_t r, __data uint8_t g, __data uint8_t b) {
+void ws2812_set_color(__data uint8_t i, __data uint8_t r, __data uint8_t g, __data uint8_t b) {
     rgb_matrix_ws2812_array[i].r = r;
     rgb_matrix_ws2812_array[i].g = g;
     rgb_matrix_ws2812_array[i].b = b;
