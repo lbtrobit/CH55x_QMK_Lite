@@ -78,7 +78,9 @@ void dynamic_macro_reset(void) {
     for (uint8_t i = 0; i < DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE; i++) {
         eeprom_write_byte(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + i, 0);
     }
-    // reset macro loop count
+}
+
+void dynamic_macro_loop_reset(void) {
     for (uint8_t i = 0; i < VIA_EEPROM_CUSTOM_MACRO_LOOP_SIZE; i++) {
         eeprom_write_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + i, 0);
     }

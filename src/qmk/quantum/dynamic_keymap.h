@@ -64,5 +64,6 @@ void     dynamic_keymap_set_encoder(uint8_t encoder_id, bool clockwise, uint16_t
 #endif // ENCODER_ENABLE
 void dynamic_keymap_reset(void);
 void dynamic_macro_reset(void);
+void dynamic_macro_loop_reset(void);
 void dynamic_macro_pressed(uint8_t id);
 void dynamic_macro_task(void);

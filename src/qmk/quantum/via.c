@@ -35,6 +35,8 @@ void eeconfig_init_via(void) {
     dynamic_keymap_reset();
     // This resets the macros in EEPROM to nothing.
     dynamic_macro_reset();
+    // This resets the macro loop in EEPROM to nothing.
+    dynamic_macro_loop_reset();
 #ifdef RGB_MATRIX_ENABLE
     // This resets the RGB Matrix settings in EEPROM to nothing.
     rgb_matrix_reset();
@@ -141,7 +143,9 @@ void via_custom_value_command(__idata uint8_t *data) {
         switch (*command_id) {
             case id_custom_set_value:
             case id_custom_save:
-                eeprom_write_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + *value_id - 1, *value_data);
+                if (*value_id >= id_qmk_macro_loop_m0 && *value_id <= id_qmk_macro_loop_m4) {
+                    eeprom_write_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + *value_id - 1, *value_data);
+                }
                 break;
             case id_custom_get_value:
                 *value_data = eeprom_read_byte(VIA_EEPROM_CUSTOM_MACRO_LOOP_ADDR + *value_id - 1);
