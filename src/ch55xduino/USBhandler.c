@@ -21,7 +21,7 @@ __xdata __at (EP2_ADDR) uint8_t Ep2Buffer[128];
 
 __data uint16_t SetupLen;
 __data uint8_t SetupReq;
-volatile __data uint8_t UsbConfig;
+volatile __xdata uint8_t UsbConfig;
 
 __code uint8_t *__data pDescr;
 

@@ -10,8 +10,8 @@ extern "C" {
 #endif
 
 void USBInit(void);
-uint8_t USB_EP1_send(const uint8_t *data, uint8_t data_len);
-uint8_t USB_EP2_send(const uint8_t *data, uint8_t data_len);
+uint8_t USB_EP1_send(const __idata uint8_t *data, __data uint8_t data_len);
+uint8_t USB_EP2_send(const __idata uint8_t *data, __data uint8_t data_len);
 uint8_t keyboard_leds(void);
 void raw_hid_task(void);
 

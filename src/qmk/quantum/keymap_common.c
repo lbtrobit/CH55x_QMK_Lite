@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 action_t action_for_key(keypos_t key) {
     // 16bit keycodes - important
     uint16_t keycode = keymap_key_to_keycode(key);
-    action_t action;
+    __data action_t action;
 
     if (keycode >= KC_A && keycode <= KC_EXSEL || keycode >= KC_LEFT_CTRL && keycode <= KC_RIGHT_GUI) {
       action.code = ACTION_KEY(keycode);

@@ -28,7 +28,7 @@ void host_system_send(uint16_t usage) {
     if (usage == last_system_usage) return;
     last_system_usage = usage;
 
-    report_extra_t report = {
+    __idata report_extra_t report = {
         .report_id = REPORT_ID_SYSTEM,
         .usage     = usage,
     };
@@ -39,7 +39,7 @@ void host_consumer_send(uint16_t usage) {
     if (usage == last_consumer_usage) return;
     last_consumer_usage = usage;
 
-    report_extra_t report = {
+    __idata report_extra_t report = {
         .report_id = REPORT_ID_CONSUMER,
         .usage     = usage,
     };
@@ -52,17 +52,17 @@ uint8_t host_keyboard_leds(void) {
 }
 
 /* send report */
-void host_keyboard_send(report_keyboard_t *report) {
+void host_keyboard_send(__idata report_keyboard_t *report) {
     report->report_id = REPORT_ID_KEYBOARD;
     USB_EP1_send((uint8_t *)report, 9);
 }
 
-void raw_hid_send(uint8_t *data, uint8_t length){
+void raw_hid_send(__idata uint8_t *data, __idata uint8_t length){
     USB_EP2_send((uint8_t *)data,length);
 }
 
 #ifdef MOUSE_ENABLE
-void host_mouse_send(report_mouse_t *report) {
+void host_mouse_send(__idata report_mouse_t *report) {
     report->report_id = REPORT_ID_MOUSE;
     USB_EP1_send((uint8_t *)report, 5);
 }

@@ -10,11 +10,13 @@
 #include "../qmk/tmk_core/protocol/report.h"
 #include <Arduino.h>
 
-volatile __xdata uint8_t UpPoint1_Busy  = 0;   //Flag of whether upload pointer is busy
-volatile __xdata uint8_t UpPoint2_Busy = 0;
+volatile __data uint8_t UpPoint1_Busy  = 0;   //Flag of whether upload pointer is busy
+volatile __data uint8_t UpPoint2_Busy = 0;
 volatile __data uint8_t raw_hid_receive_flag = false;
 
-static __data uint8_t statusLED = 0;
+__idata uint8_t raw_hid_buffer[EP2_SIZE];
+
+static __xdata uint8_t statusLED = 0;
 
 typedef void (*pTaskFn)(void);
 
@@ -37,7 +39,7 @@ void USB_EP1_OUT(){
     }
 }
 
-uint8_t USB_EP1_send(const uint8_t *data, uint8_t data_len) {
+uint8_t USB_EP1_send(const __idata uint8_t *data, __data uint8_t data_len) {
     uint16_t waitWriteCount = 0;
 
     while (UpPoint1_Busy) { // wait for 250ms or give up
@@ -71,12 +73,13 @@ void USB_EP2_OUT() {
 void raw_hid_task() {
     if (raw_hid_receive_flag)
     {
-        raw_hid_receive(Ep2Buffer, EP2_SIZE);
+        memcpy(raw_hid_buffer, Ep2Buffer, EP2_SIZE); // copy xdata from Ep2Buffer to idata raw_hid_buffer for processing, save rom space
+        raw_hid_receive(raw_hid_buffer, EP2_SIZE);
         raw_hid_receive_flag = false;
     }
 }
 
-uint8_t USB_EP2_send(const uint8_t *data, uint8_t data_len) {
+uint8_t USB_EP2_send(const __idata uint8_t *data, __data uint8_t data_len) {
     uint16_t waitWriteCount = 0;
 
     while (UpPoint2_Busy) { // wait for 250ms or give up

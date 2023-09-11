@@ -23,7 +23,7 @@
 RGB hsv_to_rgb(__data HSV hsv) {
     __data RGB rgb;
     __data uint8_t  region, remainder;
-    __data uint16_t h, s, v;
+    __data uint16_t s, v;
 
     if (hsv.s == 0) {
         rgb.r = hsv.v;
@@ -32,12 +32,12 @@ RGB hsv_to_rgb(__data HSV hsv) {
         return rgb;
     }
 
-    h = hsv.h;
+    // h = hsv.h;
     s = hsv.s;
     v = hsv.v;
 
-    region    = h * 6 / 255;
-    remainder = (h * 2 - region * 85) * 3;
+    region    = hsv.h * 6 / 255;
+    remainder = (hsv.h * 2 - region * 85) * 3;
 
     uint8_t p = (v * (255 - s)) >> 8;
     uint8_t q = (v * (255 - ((s * remainder) >> 8))) >> 8;

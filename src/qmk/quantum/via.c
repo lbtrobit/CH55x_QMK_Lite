@@ -65,13 +65,13 @@ bool process_record_via(uint16_t keycode, keyrecord_t *record) {
 }
 
 #ifdef RGB_MATRIX_ENABLE 
-void via_qmk_rgb_matrix_command(uint8_t *data)
+void via_qmk_rgb_matrix_command(__idata uint8_t *data)
 {
     // data = [ command_id, channel_id, value_id, value_data ]
-    uint8_t *command_id = &(data[0]);
-    uint8_t *channel_id = &(data[1]);
-    uint8_t *value_id = &(data[2]);
-    uint8_t *value_data = &(data[3]);
+    __idata uint8_t *command_id = &(data[0]);
+    __idata uint8_t *channel_id = &(data[1]);
+    __idata uint8_t *value_id = &(data[2]);
+    __idata uint8_t *value_data = &(data[3]);
 
     switch (*command_id) {
         case id_custom_set_value:
@@ -115,6 +115,8 @@ void via_qmk_rgb_matrix_command(uint8_t *data)
                     *value_data = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_SPEED);
                     break;
                 case id_qmk_rgb_matrix_color:
+                    *value_data = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_HUE);
+                    *(value_data + 1) = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_SAT);
                     break;
 #   endif //RGB_EFFECTS_PLUS
                 default:
@@ -128,12 +130,12 @@ void via_qmk_rgb_matrix_command(uint8_t *data)
 }
 #endif //RGB_MATRIX_ENABLE
 
-void via_custom_value_command(uint8_t *data) {
+void via_custom_value_command(__idata uint8_t *data) {
     // data = [ command_id, channel_id, value_id, value_data ]
-    uint8_t *command_id = &(data[0]);
-    uint8_t *channel_id = &(data[1]);
-    uint8_t *value_id = &(data[2]);
-    uint8_t *value_data = &(data[3]);
+    __idata uint8_t *command_id = &(data[0]);
+    __idata uint8_t *channel_id = &(data[1]);
+    __idata uint8_t *value_id = &(data[2]);
+    __idata uint8_t *value_data = &(data[3]);
 
     if (*channel_id == id_qmk_macro_loop_channel) {
         switch (*command_id) {
@@ -175,9 +177,9 @@ void via_custom_value_command(uint8_t *data) {
     *command_id = id_unhandled;
 }
 
-void raw_hid_receive(uint8_t *data, uint8_t length) {
-    uint8_t *command_id   = &(data[0]);
-    uint8_t *command_data = &(data[1]);
+void raw_hid_receive(__idata uint8_t *data, __idata uint8_t length) {
+    __idata uint8_t *command_id   = &(data[0]);
+    __idata uint8_t *command_data = &(data[1]);
 
     switch (*command_id) {
 #ifdef RGB_MATRIX_ENABLE

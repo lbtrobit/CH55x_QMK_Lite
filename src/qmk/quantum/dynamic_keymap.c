@@ -171,7 +171,7 @@ uint8_t dynamic_macro_send(void) {
     uint8_t macro_state = MACRO_STATE_ABORTED;
 
     // Send the macro string by making a temporary string.
-    char data[9] = {0};
+    __data char data[9] = {0};
 
     data[0] = eeprom_read_byte(macro.dataPtr++);
     // Stop at the null terminator of this macro string

@@ -32,7 +32,7 @@ static uint8_t qadd8(uint8_t i, uint8_t j)
 bool rgb_matrix_effect_plus(void) {
 
     RGB rgb;
-    HSV hsv;
+    __data HSV hsv;
     hsv.s = rgb_matrix_config.hsv.s;
     hsv.v = rgb_matrix_config.hsv.v;
 

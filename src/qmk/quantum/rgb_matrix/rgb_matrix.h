@@ -60,22 +60,22 @@ void rgb_matrix_init(void);
 void rgb_matrix_task(void);
 void rgb_matrix_reset(void);
 void rgb_matrix_signalrgb_set_leds(uint8_t *data);
-void rgb_matrix_set_mode(__data uint8_t mode);
-void rgb_matrix_set_mode_noeeprom(__data uint8_t mode);
+void rgb_matrix_set_mode(uint8_t mode);
+void rgb_matrix_set_mode_noeeprom(uint8_t mode);
 void rgb_matrix_reload_mode(void);
-void rgb_matrix_set_hs(__data uint8_t hue, __data uint8_t sat);
-void rgb_matrix_set_val(__data uint8_t val);
-void rgb_matrix_set_speed(__data uint8_t speed);
+void rgb_matrix_set_hs(uint8_t hue, uint8_t sat);
+void rgb_matrix_set_val(uint8_t val);
+void rgb_matrix_set_speed(uint8_t speed);
 
 void ws2812_init(void);
 void ws2812_set_color(__data uint8_t index, __data uint8_t red, __data uint8_t green, __data uint8_t blue);
-void ws2812_set_color_all(__data uint8_t red, __data uint8_t green, __data uint8_t blue);
+void ws2812_set_color_all(uint8_t red, uint8_t green, uint8_t blue);
 void ws2812_flush(void);
 
 // LED color buffer
 extern __xdata LED_TYPE rgb_matrix_ws2812_array[RGB_MATRIX_LED_COUNT];
 extern const led_point_t k_rgb_matrix_center;
 extern const led_config_t g_led_config;
-extern __idata rgb_config_t rgb_matrix_config;
-extern __idata uint32_t g_rgb_timer;
+extern __data rgb_config_t rgb_matrix_config;
+extern __data uint32_t g_rgb_timer;
 

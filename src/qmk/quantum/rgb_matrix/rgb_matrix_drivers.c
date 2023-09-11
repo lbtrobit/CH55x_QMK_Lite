@@ -70,7 +70,7 @@ void ws2812_set_color(__data uint8_t i, __data uint8_t r, __data uint8_t g, __da
     rgb_matrix_ws2812_array[i].b = b;
 }
 
-void ws2812_set_color_all(__data uint8_t r, __data uint8_t g, __data uint8_t b) {
+void ws2812_set_color_all(uint8_t r, uint8_t g, uint8_t b) {
     for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
         ws2812_set_color(i, r, g, b);
     }

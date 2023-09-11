@@ -33,8 +33,8 @@ const led_point_t k_rgb_matrix_center = RGB_MATRIX_CENTER;
 const led_config_t g_led_config = RGB_CONFIG
 #endif // RGB_EFFECTS_PLUS
 
-__idata rgb_config_t rgb_matrix_config;
-__idata uint32_t g_rgb_timer;
+__data rgb_config_t rgb_matrix_config;
+__data uint32_t g_rgb_timer;
 
 // internals
 static __data uint32_t          rgb_timer_buffer;
@@ -51,7 +51,7 @@ static void rgb_task_start(void) {
 }
 
 static void rgb_task_render(uint8_t effect) {
-    bool rendering         = false;
+    __data bool rendering         = false;
 
     rgb_effect_params.init = (effect != rgb_last_effect);
 
@@ -113,12 +113,12 @@ void rgb_matrix_task(void) {
     }
 }
 
-void rgb_matrix_set_mode(__data uint8_t mode) {
+void rgb_matrix_set_mode(uint8_t mode) {
     rgb_matrix_config.mode = mode;
     eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_EFFECT, rgb_matrix_config.mode);
 }
 
-void rgb_matrix_set_mode_noeeprom(__data uint8_t mode) {
+void rgb_matrix_set_mode_noeeprom(uint8_t mode) {
     rgb_matrix_config.mode = mode;
 }
 
@@ -127,19 +127,19 @@ void rgb_matrix_reload_mode(void) {
 }
 
 #ifdef RGB_EFFECTS_PLUS
-void rgb_matrix_set_hs(__data uint8_t hue, __data uint8_t sat) {
+void rgb_matrix_set_hs(uint8_t hue, uint8_t sat) {
     rgb_matrix_config.hsv.h  = hue;
     rgb_matrix_config.hsv.s  = sat;
     eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_HUE, rgb_matrix_config.hsv.h);
     eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_SAT, rgb_matrix_config.hsv.s);
 }
 
-void rgb_matrix_set_val(__data uint8_t val) {
+void rgb_matrix_set_val(uint8_t val) {
     rgb_matrix_config.hsv.v  = val;
     eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_VAL, rgb_matrix_config.hsv.v);
 }
 
-void rgb_matrix_set_speed(__data uint8_t speed) {
+void rgb_matrix_set_speed(uint8_t speed) {
     rgb_matrix_config.speed  = speed;
     eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_SPEED, rgb_matrix_config.speed);
 }
@@ -186,7 +186,7 @@ bool rgb_matrix_none(effect_params_t *params) {
 
 bool rgb_matrix_SOLID_RGB(void)
 {
-    LED_TYPE color;
+    __data LED_TYPE color;
     color.r = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_RED);
     color.g = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_GREEN);
     color.b = eeprom_read_byte(RGB_MATRIX_EEPROM_ADDR_BLUE);
@@ -199,16 +199,15 @@ bool rgb_matrix_SIGNAL_RGB(void) {
 }
 
 void rgb_matrix_signalrgb_set_leds(uint8_t *data) {
-    uint8_t first_led_index = data[1];
-    uint8_t leds_num        = data[2];
+    __data uint8_t leds_num        = data[2];
 
     if ((leds_num >= 10) || (rgb_matrix_config.mode != RGB_MATRIX_SIGNAL_RGB)) {
         data[1] = DEVICE_ERROR_LEDS;
         return;
     }
-    uint8_t led_index   = first_led_index;
-    uint8_t color_index = 3;
-    for (uint8_t i = 0; i < leds_num; ++i, ++led_index, color_index += 3) {
+    __data uint8_t led_index   = data[1];
+    __data uint8_t color_index = 3;
+    for (__data uint8_t i = 0; i < leds_num; ++i, ++led_index, color_index += 3) {
         rgb_matrix_ws2812_array[led_index].r = data[color_index];
         rgb_matrix_ws2812_array[led_index].g = data[color_index + 1];
         rgb_matrix_ws2812_array[led_index].b = data[color_index + 2];
