@@ -16,15 +16,48 @@
 
 #include "quantum.h"
 
+__data uint8_t current_layer = 0, layer_store = 0;
+
+#ifdef TWO_LAYER_ENABLE
+void layer_switch(uint16_t keycode, keyrecord_t *record) {
+    if (record->event.pressed) {
+        switch (keycode) {
+            case KC_TO_0: current_layer = 0; break;
+            case KC_TO_1: current_layer = 1; break;
+            case KC_MO_0: layer_store = current_layer; current_layer = 0; break;
+            case KC_MO_1: layer_store = current_layer; current_layer = 1; break;
+            default: break;
+        }
+    } else {
+        if (keycode == KC_MO_0 || keycode == KC_MO_1) {
+            current_layer = layer_store;
+        }
+    }
+}
+#endif // TWO_LAYER_ENABLE
+
 /* Core keycode function, hands off handling to other functions,
     then processes internal quantum keycodes, and then processes
     ACTIONs.                                                      */
 bool process_record_quantum(keyrecord_t *record) {
     uint16_t keycode = keymap_key_to_keycode(record->event.key);
 
+#ifdef TWO_LAYER_ENABLE
+    if (keycode >= KC_TO_0 && keycode <= KC_MO_1) {
+        layer_switch(keycode, record);
+        return false;
+    }
+#endif // TWO_LAYER_ENABLE
+
     if (process_record_via(keycode, record) == false) {
         return false;
     }
+
+#if defined(RGB_EFFECTS_PLUS) && defined(RGB_MATRIX_ENABLE)
+    if (process_rgb_matrix(keycode, record) == false) {
+        return false;
+    }
+#endif
     
     return true;
 }

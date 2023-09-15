@@ -42,4 +42,6 @@
 #    include "rgb_matrix/rgb_matrix.h"
 #endif
 
+extern __data uint8_t current_layer, layer_store;
+
 void usb_send_for_debug(uint8_t v1, uint8_t v2);

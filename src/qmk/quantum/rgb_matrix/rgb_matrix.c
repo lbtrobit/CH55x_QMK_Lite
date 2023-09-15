@@ -37,7 +37,7 @@ __data rgb_config_t rgb_matrix_config;
 __data uint32_t g_rgb_timer;
 
 // internals
-static __data uint32_t          rgb_timer_buffer;
+static __idata uint32_t         rgb_timer_buffer;
 static __data uint8_t           rgb_last_effect   = UINT8_MAX;
 static __data effect_params_t   rgb_effect_params = {false};
 static __data rgb_task_states   rgb_task_state = SYNCING;
@@ -62,9 +62,11 @@ static void rgb_task_render(uint8_t effect) {
             rendering = rgb_matrix_none(&rgb_effect_params);
             break;
 
+#ifndef RGB_EFFECTS_PLUS
         case RGB_MATRIX_SOLID_RGB:
             rendering = rgb_matrix_SOLID_RGB();
             break;
+#endif // RGB_EFFECTS_PLUS
 
         case RGB_MATRIX_SIGNAL_RGB:
             rendering = rgb_matrix_SIGNAL_RGB();
@@ -72,7 +74,7 @@ static void rgb_task_render(uint8_t effect) {
 
         default:
  #ifdef RGB_EFFECTS_PLUS
-            if (effect >= RGB_MATRIX_CYCLE_ALL && effect < RGB_MATRIX_SIGNAL_RGB) {
+            if (effect >= RGB_MATRIX_SOLID_COLOR && effect <= RGB_MATRIX_HUE_WAVE) {
                 rendering = rgb_matrix_effect_plus();
             }
 #endif // RGB_EFFECTS_PLUS
@@ -147,20 +149,97 @@ void rgb_matrix_set_speed(uint8_t speed) {
 
 void rgb_matrix_reset(void)
 {
-    // reset eeprom rgb data
-    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_RED, 0x00);
-    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_GREEN, 0x80);
-    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_BLUE, 0x80);
-
 #ifdef RGB_EFFECTS_PLUS
     rgb_matrix_set_hs(10, 255);
     rgb_matrix_set_val(100);
     rgb_matrix_set_speed(50);
     rgb_matrix_set_mode(RGB_MATRIX_CYCLE_ALL);
 #else
+    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_RED, 0x00);
+    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_GREEN, 0x80);
+    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_BLUE, 0x80);
     rgb_matrix_set_mode(RGB_MATRIX_NONE);
 #endif // RGB_EFFECTS_ENABLE
 }
+
+#ifdef RGB_EFFECTS_PLUS
+bool process_rgb_matrix(uint16_t keycode, keyrecord_t *record) {
+    if (record->event.pressed) {
+        if (keycode >= RGB_MODE_U && keycode <= RGB_SPD_U) {
+            switch (keycode) {
+                case RGB_MODE_U:
+                    rgb_matrix_config.mode++;
+                    if (rgb_matrix_config.mode >= RGB_MATRIX_SIGNAL_RGB) {
+                        rgb_matrix_config.mode = RGB_MATRIX_NONE;
+                    }
+                    rgb_matrix_set_mode(rgb_matrix_config.mode);
+                    break;
+                case RGB_VAI_U:
+                    if (rgb_matrix_config.hsv.v < 245) {
+                        rgb_matrix_config.hsv.v += 10;
+                        rgb_matrix_set_val(rgb_matrix_config.hsv.v);
+                    }
+                    break;
+                case RGB_VAD_U:
+                    if (rgb_matrix_config.hsv.v > 10) {
+                        rgb_matrix_config.hsv.v -= 10;   
+                    } else {
+                        rgb_matrix_config.hsv.v = 0;
+                    }
+                    rgb_matrix_set_val(rgb_matrix_config.hsv.v);
+                    break;
+                case RGB_SPI_U:
+                    if (rgb_matrix_config.speed < 245) {
+                        rgb_matrix_config.speed += 10;
+                        rgb_matrix_set_speed(rgb_matrix_config.speed);
+                    }
+                    break;
+                case RGB_SPD_U:
+                    if (rgb_matrix_config.speed > 10) {
+                        rgb_matrix_config.speed -= 10;
+                    } else {
+                        rgb_matrix_config.speed = 0;
+                    }
+                    rgb_matrix_set_speed(rgb_matrix_config.speed);
+                    break;
+                default:
+                    switch (keycode) {
+                        case RGB_HUI_U:
+                            if (rgb_matrix_config.hsv.h < 250) {
+                                rgb_matrix_config.hsv.h += 5;
+                            } else {
+                                rgb_matrix_config.hsv.h = 255;
+                            }
+                            break;
+                        case RGB_HUD_U:
+                            if (rgb_matrix_config.hsv.h > 5) {
+                                rgb_matrix_config.hsv.h -= 5;
+                            } else {
+                                rgb_matrix_config.hsv.h = 0;
+                            }
+                            break;
+                        case RGB_SAI_U:
+                            if (rgb_matrix_config.hsv.s < 245) {
+                                rgb_matrix_config.hsv.s += 10;
+                            } else {
+                                rgb_matrix_config.hsv.s = 255;
+                            }
+                            break;
+                        case RGB_SAD_U:
+                            if (rgb_matrix_config.hsv.s > 10) {
+                                rgb_matrix_config.hsv.s -= 10;                  
+                            }
+                            break;
+                    }
+                    rgb_matrix_set_hs(rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s);
+                    break;
+            }
+            return false;
+        }
+    }
+    return true;
+}
+#endif // RGB_EFFECTS_PLUS
 
 void rgb_matrix_init(void) {
     ws2812_init();
@@ -184,6 +263,7 @@ bool rgb_matrix_none(effect_params_t *params) {
     return false;
 }
 
+#ifndef RGB_EFFECTS_PLUS
 bool rgb_matrix_SOLID_RGB(void)
 {
     __data LED_TYPE color;
@@ -193,6 +273,7 @@ bool rgb_matrix_SOLID_RGB(void)
     ws2812_set_color_all(color.r, color.g, color.b);
     return false;
 }
+#endif
 
 bool rgb_matrix_SIGNAL_RGB(void) {
     return false;

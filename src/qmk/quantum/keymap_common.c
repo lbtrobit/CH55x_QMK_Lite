@@ -58,13 +58,13 @@ action_t action_for_key(keypos_t key) {
 // translates key to keycode
 uint16_t keymap_key_to_keycode(keypos_t key) {
     if (key.row < MATRIX_ROWS && key.col < MATRIX_COLS) {
-        return dynamic_keymap_get_keycode(key.row, key.col);
+        return dynamic_keymap_get_keycode(current_layer, key.row, key.col);
     }
 #ifdef ENCODER_ENABLE
     else if (key.row == KEYLOC_ENCODER_CW && key.col < NUM_ENCODERS) {
-        return dynamic_keymap_get_encoder(key.col, true);
+        return dynamic_keymap_get_encoder(current_layer, key.col, true);
     } else if (key.row == KEYLOC_ENCODER_CCW && key.col < NUM_ENCODERS) {
-        return dynamic_keymap_get_encoder(key.col, false);
+        return dynamic_keymap_get_encoder(current_layer, key.col, false);
     }
 #endif // ENCODER_ENABLE
     return KC_NO;

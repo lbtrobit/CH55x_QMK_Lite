@@ -12,6 +12,73 @@
       [{"w" : 2},"4,0", "4,1", {"h":2,"y":-1},"4,2"]
     ]
   },
+  "customKeycodes": [
+    {
+      "name": "TO(0)",
+      "title": "\u5207\u6362\u5230\u5c42\u0030",
+      "shortName": "TO(0)"
+    },
+    {
+      "name": "TO(1)",
+      "title": "\u5207\u6362\u5230\u5c42\u0031",
+      "shortName": "TO(1)"
+    },
+    {
+      "name": "FN(0)",
+      "title": "\u6309\u4f4f\u5207\u6362\u5230\u5c42\u0030",
+      "shortName": "FN(0)"
+    },
+    {
+      "name": "FN(1)",
+      "title": "\u6309\u4f4f\u5207\u6362\u5230\u5c42\u0031",
+      "shortName": "FN(1)"
+    },
+    {
+      "name": "RGB\nMode",
+      "title": "\u0052\u0047\u0042\u6a21\u5f0f\u5207\u6362",
+      "shortName": "Mode"
+    },
+    {
+      "name": "RGB\nHue +",
+      "title": "\u0052\u0047\u0042\u8272\u76f8\u52a0",
+      "shortName": "Hue +"
+    },
+    {
+      "name": "RGB\nHue -",
+      "title": "\u0052\u0047\u0042\u8272\u76f8\u51cf",
+      "shortName": "Hue -"
+    },
+    {
+      "name": "RGB\nSat +",
+      "title": "\u0052\u0047\u0042\u9971\u548c\u5ea6\u52a0",
+      "shortName": "Sat +"
+    },
+    {
+      "name": "RGB\nSat -",
+      "title": "\u0052\u0047\u0042\u9971\u548c\u5ea6\u51cf",
+      "shortName": "Sat -"
+    },
+    {
+      "name": "RGB\nVal +",
+      "title": "\u0052\u0047\u0042\u4eae\u5ea6\u52a0",
+      "shortName": "Val +"
+    },
+    {
+      "name": "RGB\nVal -",
+      "title": "\u0052\u0047\u0042\u4eae\u5ea6\u51cf",
+      "shortName": "Val -"
+    },
+    {
+      "name": "RGB\nSpd +",
+      "title": "\u0052\u0047\u0042\u901f\u5ea6\u52a0",
+      "shortName": "Spd +"
+    },
+    {
+      "name": "RGB\nSpd -",
+      "title": "\u0052\u0047\u0042\u901f\u5ea6\u51cf",
+      "shortName": "Spd -"
+    }
+  ],
   "menus": [
     {
       "label": "Lighting",
@@ -25,7 +92,7 @@
               "content": ["id_qmk_rgb_matrix_effect", 3, 2],
               "options": [
                 "All Off",
-                "Solid RGB",
+                "Solid Color",
                 "Cycle All",
                 "Cycle Left/Right",
                 "Cycle Up/Down",
@@ -34,7 +101,7 @@
               ]
             },
             {
-              "showIf": "{id_qmk_rgb_matrix_effect} != 0 && {id_qmk_rgb_matrix_effect} != 1 ",
+              "showIf": "{id_qmk_rgb_matrix_effect} != 0 ",
               "label": "Brightness",
               "type": "range",
               "options": [0, 255],
@@ -48,31 +115,10 @@
               "content": ["id_qmk_rgb_matrix_effect_speed", 3, 3]
             },
             {
-              "showIf": "{id_qmk_rgb_matrix_effect} != 0 && {id_qmk_rgb_matrix_effect} != 1 ",
+              "showIf": "{id_qmk_rgb_matrix_effect} != 0 ",
               "label": "Color",
               "type": "color",
               "content": ["id_qmk_rgb_matrix_color", 3, 4]
-            },
-            {
-              "showIf": "{id_qmk_rgb_matrix_effect} == 1",
-              "label": "Red",
-              "type": "range",
-              "options": [0, 255],
-              "content": ["id_qmk_rgb_matrix_color_red", 3, 5]
-            },
-            {
-              "showIf": "{id_qmk_rgb_matrix_effect} == 1",
-              "label": "Green",
-              "type": "range",
-              "options": [0, 255],
-              "content": ["id_qmk_rgb_matrix_color_green", 3, 6]
-            },
-            {
-              "showIf": "{id_qmk_rgb_matrix_effect} == 1",
-              "label": "Blue",
-              "type": "range",
-              "options": [0, 255],
-              "content": ["id_qmk_rgb_matrix_color_blue", 3, 7]
             }
           ]
         }

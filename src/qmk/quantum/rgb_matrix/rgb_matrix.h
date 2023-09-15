@@ -26,13 +26,15 @@
 
 enum rgb_matrix_effects {
     RGB_MATRIX_NONE = 0,
-    RGB_MATRIX_SOLID_RGB, // via set Solid RGB 
 #ifdef RGB_EFFECTS_PLUS
+    RGB_MATRIX_SOLID_COLOR,
     RGB_MATRIX_CYCLE_ALL,
     RGB_MATRIX_CYCLE_LEFT_RIGHT,
     RGB_MATRIX_CYCLE_UP_DOWN,
     RGB_MATRIX_RAINBOW_MOVING_CHEVRON,
     RGB_MATRIX_HUE_WAVE,
+#else
+    RGB_MATRIX_SOLID_RGB, // via set Solid RGB
 #endif
     RGB_MATRIX_SIGNAL_RGB,
     RGB_MATRIX_EFFECT_MAX
@@ -41,14 +43,18 @@ enum rgb_matrix_effects {
 #ifdef RGB_MATRIX_ENABLE
 //epprom地址的偏移
 enum rgb_matrix_eeprom_offset {
-    RGB_MATRIX_EEPROM_ADDR_RED = VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR,
-    RGB_MATRIX_EEPROM_ADDR_GREEN,
-    RGB_MATRIX_EEPROM_ADDR_BLUE,
-    RGB_MATRIX_EEPROM_ADDR_EFFECT,
+#ifdef RGB_EFFECTS_PLUS
+    RGB_MATRIX_EEPROM_ADDR_EFFECT = VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR,
     RGB_MATRIX_EEPROM_ADDR_HUE,
     RGB_MATRIX_EEPROM_ADDR_SAT,
     RGB_MATRIX_EEPROM_ADDR_VAL,
     RGB_MATRIX_EEPROM_ADDR_SPEED,
+#else
+    RGB_MATRIX_EEPROM_ADDR_RED = VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR,
+    RGB_MATRIX_EEPROM_ADDR_GREEN,
+    RGB_MATRIX_EEPROM_ADDR_BLUE,
+    RGB_MATRIX_EEPROM_ADDR_EFFECT,
+#endif
 };
 #endif
 
@@ -56,6 +62,7 @@ bool rgb_matrix_none(effect_params_t *params);
 bool rgb_matrix_SOLID_RGB(void);
 bool rgb_matrix_SIGNAL_RGB(void);
 
+bool process_rgb_matrix(uint16_t keycode, keyrecord_t *record);
 void rgb_matrix_init(void);
 void rgb_matrix_task(void);
 void rgb_matrix_reset(void);

@@ -95,9 +95,11 @@ void via_qmk_rgb_matrix_command(__idata uint8_t *data)
                         break;
 #   endif //RGB_EFFECTS_PLUS
                     default:
+#   ifndef RGB_EFFECTS_PLUS
                         if (*value_id >= id_qmk_rgb_matrix_color_red && *value_id <= id_qmk_rgb_matrix_color_blue) {
                             eeprom_write_byte(VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR + *value_id - 5, *value_data);
                         }
+#   endif //RGB_EFFECTS_PLUS
                         break;
                 }
                 eeprom_save_interval = timer_read();
@@ -122,9 +124,11 @@ void via_qmk_rgb_matrix_command(__idata uint8_t *data)
                     break;
 #   endif //RGB_EFFECTS_PLUS
                 default:
+#   ifndef RGB_EFFECTS_PLUS
                     if (*value_id >= id_qmk_rgb_matrix_color_red && *value_id <= id_qmk_rgb_matrix_color_blue) {
                         *value_data = eeprom_read_byte(VIA_EEPROM_CUSTOM_RGB_MATRIX_ADDR + *value_id - 5);
                     }
+#   endif //RGB_EFFECTS_PLUS
                     break;
             }
             break;
@@ -209,13 +213,13 @@ void raw_hid_receive(__idata uint8_t *data, __idata uint8_t length) {
         case id_set_keyboard_value:
             break;
         case id_dynamic_keymap_get_keycode: {
-            uint16_t keycode = dynamic_keymap_get_keycode(command_data[1], command_data[2]);
+            uint16_t keycode = dynamic_keymap_get_keycode(command_data[0], command_data[1], command_data[2]);
             command_data[3]  = keycode >> 8;
             command_data[4]  = keycode & 0xFF;
             break;
         }
         case id_dynamic_keymap_set_keycode: {
-            dynamic_keymap_set_keycode(command_data[1], command_data[2], (command_data[3] << 8) | command_data[4]);
+            dynamic_keymap_set_keycode(command_data[0], command_data[1], command_data[2], (command_data[3] << 8) | command_data[4]);
             break;
         }
         case id_dynamic_keymap_reset: {
@@ -257,30 +261,32 @@ void raw_hid_receive(__idata uint8_t *data, __idata uint8_t length) {
             break;
         }
         case id_dynamic_keymap_get_layer_count: {
-            command_data[0] = 1;
+            command_data[0] = DYNAMIC_KEYMAP_LAYER_COUNT;
             break;
         }
         case id_dynamic_keymap_get_buffer: {
+            __data uint16_t offset = (command_data[0] << 8) | command_data[1];
             for (uint8_t i = 0; i < command_data[2]; i++) {
-                command_data[3 + i] = eeprom_read_byte(DYNAMIC_KEYMAP_EEPROM_ADDR + command_data[1] + i);
+                command_data[3 + i] = eeprom_read_byte(DYNAMIC_KEYMAP_EEPROM_ADDR + offset + i);
             }
             break;
         }
         case id_dynamic_keymap_set_buffer: {
+            __data uint16_t offset = (command_data[0] << 8) | command_data[1];
             for (uint8_t i = 0; i < command_data[2]; i++) {
-                eeprom_write_byte(DYNAMIC_KEYMAP_EEPROM_ADDR + command_data[1] + i, command_data[3 + i]);
+                eeprom_write_byte(DYNAMIC_KEYMAP_EEPROM_ADDR + offset + i, command_data[3 + i]);
             }
             break;
         }
 #ifdef ENCODER_ENABLE
         case id_dynamic_keymap_get_encoder: {
-            uint16_t keycode = dynamic_keymap_get_encoder(command_data[1], command_data[2] != 0);
+            uint16_t keycode = dynamic_keymap_get_encoder(command_data[0], command_data[1], command_data[2] != 0);
             command_data[3]  = keycode >> 8;
             command_data[4]  = keycode & 0xFF;
             break;
         }
         case id_dynamic_keymap_set_encoder: {
-            dynamic_keymap_set_encoder(command_data[1], command_data[2] != 0, (command_data[3] << 8) | command_data[4]);
+            dynamic_keymap_set_encoder(command_data[0], command_data[1], command_data[2] != 0, (command_data[3] << 8) | command_data[4]);
             break;
         }
 #endif

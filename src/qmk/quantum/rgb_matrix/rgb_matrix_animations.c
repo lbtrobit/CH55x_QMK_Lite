@@ -39,6 +39,9 @@ bool rgb_matrix_effect_plus(void) {
     uint8_t time = scale16by8(g_rgb_timer, qadd8(rgb_matrix_config.speed >> 2, 1));
     for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
         switch (rgb_matrix_config.mode) {
+            case RGB_MATRIX_SOLID_COLOR:
+                hsv.h = rgb_matrix_config.hsv.h;
+                break;
             case RGB_MATRIX_CYCLE_ALL:
                 hsv.h = time;
                 break;
