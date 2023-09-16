@@ -32,6 +32,7 @@ void    host_keyboard_send(__idata report_keyboard_t *report);
 void    host_system_send(uint16_t usage);
 void    host_consumer_send(uint16_t usage);
 void    host_mouse_send(__idata report_mouse_t *report);
+void    host_dial_send(__idata report_dial_t *report);
 
 void    raw_hid_receive(__idata uint8_t *data, __idata uint8_t length);
 void    raw_hid_send(__idata uint8_t *data, __idata uint8_t length);

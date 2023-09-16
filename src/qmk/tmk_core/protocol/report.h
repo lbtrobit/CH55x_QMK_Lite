@@ -30,6 +30,7 @@ enum hid_report_ids {
     REPORT_ID_SYSTEM,
     REPORT_ID_CONSUMER,
     REPORT_ID_MOUSE,
+    REPORT_ID_DIAL,
 };
 
 /* Consumer Page (0x0C)
@@ -157,6 +158,17 @@ typedef struct {
     int8_t y;
     int8_t v;
 } report_mouse_t;
+
+typedef struct {
+    uint8_t report_id;
+    union {
+        uint16_t raw;
+        struct {
+            uint16_t button : 1;
+            int16_t degree : 15;
+        };
+    } dial;
+} report_dial_t;
 
 uint16_t report_keycode_to_system(uint8_t key);
 uint16_t report_keycode_to_consumer(uint8_t key);

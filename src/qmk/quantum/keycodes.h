@@ -1368,22 +1368,6 @@ enum qk_keycode_defines {
     QK_AREP    = QK_ALT_REPEAT_KEY,
 };
 
-enum keycodes_user {
-    KC_TO_0 = QK_KB_0,
-    KC_TO_1,
-    KC_MO_0,
-    KC_MO_1,
-    RGB_MODE_U,
-    RGB_HUI_U,
-    RGB_HUD_U,
-    RGB_SAI_U,
-    RGB_SAD_U,
-    RGB_VAI_U,
-    RGB_VAD_U,
-    RGB_SPI_U,
-    RGB_SPD_U,
-};
-
 // Range Helpers
 #define IS_QK_BASIC(code) ((code) >= QK_BASIC && (code) <= QK_BASIC_MAX)
 #define IS_QK_MODS(code) ((code) >= QK_MODS && (code) <= QK_MODS_MAX)

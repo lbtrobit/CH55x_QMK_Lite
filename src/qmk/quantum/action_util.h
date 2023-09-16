@@ -30,6 +30,7 @@ extern __idata report_mouse_t mouse_report;
 
 void send_keyboard_report(void);
 void send_mouse_report(void);
+void send_dial_report(void);
 
 extern void add_key(uint8_t key);
 extern void del_key(uint8_t key);
@@ -38,6 +39,9 @@ extern void clear_keys(void);
 void add_mouse_key(uint8_t key);
 void del_mouse_key(uint8_t key);
 void clear_mouse(void);
+
+void add_dial_key(uint16_t keycode);
+void del_dial_key(uint16_t keycode);
 
 /* modifier */
 void    add_mods(uint8_t mods);

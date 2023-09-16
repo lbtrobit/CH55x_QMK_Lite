@@ -67,3 +67,10 @@ void host_mouse_send(__idata report_mouse_t *report) {
     USB_EP1_send((uint8_t *)report, 5);
 }
 #endif
+
+#ifdef DIAL_ENABLE
+void host_dial_send(__idata report_dial_t *report) {
+    report->report_id = REPORT_ID_DIAL;
+    USB_EP1_send((uint8_t *)report, 3);
+}
+#endif

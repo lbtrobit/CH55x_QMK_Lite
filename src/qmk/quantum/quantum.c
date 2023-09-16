@@ -36,6 +36,17 @@ void layer_switch(uint16_t keycode, keyrecord_t *record) {
 }
 #endif // TWO_LAYER_ENABLE
 
+#ifdef DIAL_ENABLE
+void process_dial_key(uint16_t keycode, keyrecord_t *record) {
+    if (record->event.pressed) {
+        add_dial_key(keycode);
+    } else {
+        del_dial_key(keycode);
+    }
+    send_dial_report();
+}
+#endif
+
 /* Core keycode function, hands off handling to other functions,
     then processes internal quantum keycodes, and then processes
     ACTIONs.                                                      */
@@ -48,6 +59,13 @@ bool process_record_quantum(keyrecord_t *record) {
         return false;
     }
 #endif // TWO_LAYER_ENABLE
+
+#ifdef DIAL_ENABLE
+    if (keycode >= DIAL_CCW && keycode <= DIAL_CW) {
+        process_dial_key(keycode, record);
+        return false;
+    }
+#endif // DIAL_ENABLE
 
     if (process_record_via(keycode, record) == false) {
         return false;

@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../tmk_core/protocol/report.h"
 #include "action_util.h"
 #include "../platforms/timer.h"
+#include "quantum.h"
+#include <stdint.h>
 #include <string.h>
 
 static __data uint8_t real_mods = 0;
@@ -25,6 +27,10 @@ static __data uint8_t weak_mods = 0;
 
 __idata report_keyboard_t keyboard_report;
 __idata report_mouse_t mouse_report;
+
+#ifdef DIAL_ENABLE
+__idata report_dial_t dial_report;
+#endif
 
 /* key */
 void add_key(uint8_t key) {
@@ -125,3 +131,50 @@ void del_weak_mods(uint8_t mods) {
 void clear_weak_mods(void) {
     weak_mods = 0;
 }
+
+#ifdef DIAL_ENABLE
+/* dial */
+void add_dial_key(uint16_t keycode) {
+    switch (keycode) {
+        case DIAL_BUTTON:
+            dial_report.dial.button = 1;
+            break;
+        case DIAL_CW:
+            dial_report.dial.raw = (int16_t)200;
+            break;
+        case DIAL_CCW:
+            dial_report.dial.raw = (int16_t)-200;
+            break;
+        default:
+            break;
+    }
+}
+
+void del_dial_key(uint16_t keycode) {
+    switch (keycode) {
+        case DIAL_BUTTON:
+            dial_report.dial.button = 0;
+            break;
+        case DIAL_CW:
+        case DIAL_CCW:
+            dial_report.dial.raw = 0;
+            break;
+        default:
+            break;
+    }
+}
+
+/** \brief Send dial report
+ *
+ * FIXME: needs doc
+ */
+void send_dial_report(void) {
+    static __xdata report_dial_t last_report;
+
+    /* Only send the report if there are changes to propagate to the host. */
+    if (memcmp(&dial_report, &last_report, sizeof(report_dial_t)) != 0) {
+        memcpy(&last_report, &dial_report, sizeof(report_dial_t));
+        host_dial_send(&dial_report);
+    }
+}
+#endif

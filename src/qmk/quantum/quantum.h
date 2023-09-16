@@ -42,6 +42,32 @@
 #    include "rgb_matrix/rgb_matrix.h"
 #endif
 
+enum keycodes_user {
+    BASE_CODE = QK_KB_0 - 1,
+#ifdef DIAL_ENABLE
+    DIAL_CCW,
+    DIAL_BUTTON,
+    DIAL_CW,   
+#endif
+#ifdef TWO_LAYER_ENABLE
+    KC_TO_0,
+    KC_TO_1,
+    KC_MO_0,
+    KC_MO_1,
+#endif
+#ifdef RGB_EFFECTS_PLUS
+    RGB_MODE_U,
+    RGB_HUI_U,
+    RGB_HUD_U,
+    RGB_SAI_U,
+    RGB_SAD_U,
+    RGB_VAI_U,
+    RGB_VAD_U,
+    RGB_SPI_U,
+    RGB_SPD_U,
+#endif   
+};
+
 extern __data uint8_t current_layer, layer_store;
 
 void usb_send_for_debug(uint8_t v1, uint8_t v2);

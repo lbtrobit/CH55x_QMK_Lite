@@ -14,6 +14,21 @@
   },
   "customKeycodes": [
     {
+      "name": "Dial -",
+      "title": "\u0053\u0075\u0072\u0066\u0061\u0063\u0065\u0020\u0044\u0069\u0061\u006c\u9006\u65f6\u9488\u8f6c",
+      "shortName": "Dial -"
+    },
+    {
+      "name": "Dial\nButton",
+      "title": "\u0053\u0075\u0072\u0066\u0061\u0063\u0065\u0020\u0044\u0069\u0061\u006c\u6309\u952e",
+      "shortName": "Dial B"
+    },
+    {
+      "name": "Dial +",
+      "title": "\u0053\u0075\u0072\u0066\u0061\u0063\u0065\u0020\u0044\u0069\u0061\u006c\u987a\u65f6\u9488\u8f6c",
+      "shortName": "Dial +"
+    },
+    {
       "name": "TO(0)",
       "title": "\u5207\u6362\u5230\u5c42\u0030",
       "shortName": "TO(0)"

@@ -24,6 +24,8 @@
 #define MOUSE_ENABLE            //开启可设置为鼠标键，rom:886 bytes
 #define FCODE_TO_MOUSE_ENABLE   //开启发宏时F13-F23键转鼠标按键，补充VIA不能设置发鼠标按键宏，能拓展更多应用。键值对应关系如表：FCodeToMousemap
 
+#define DIAL_ENABLE             //开启surface dial按键功能，rom:404 bytes
+
 #define RGB_MATRIX_ENABLE       //开启RGB灯效，开启后默认开启via设置固定RGB和signalrgb两种模式，rom:1158 bytes
 #define WS2812_DI_PIN        15 //RGB灯数据引脚
 #define RGB_MATRIX_LED_COUNT 17 //RGB灯数量
