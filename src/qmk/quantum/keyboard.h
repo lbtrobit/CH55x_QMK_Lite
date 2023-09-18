@@ -49,6 +49,8 @@ typedef struct {
 /* special keypos_t entries */
 #define KEYLOC_ENCODER_CW 253
 #define KEYLOC_ENCODER_CCW 252
+#define KEYLOC_TAP_DANCE_MIN 240
+#define KEYLOC_TAP_DANCE_MAX 250
 
 /* it runs once after initializing host side protocol, debug and MCU peripherals. */
 void keyboard_init(void);

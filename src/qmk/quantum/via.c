@@ -41,6 +41,10 @@ void eeconfig_init_via(void) {
     // This resets the RGB Matrix settings in EEPROM to nothing.
     rgb_matrix_reset();
 #endif //RGB_MATRIX_ENABLE
+#ifdef TAP_DANCE_ENABLE
+    // This resets the tap dance settings in EEPROM to nothing.
+    dynamic_tap_dance_reset();
+#endif //TAP_DANCE_ENABLE
     // Save the magic number last, in case saving was interrupted
     eeprom_write_byte(VIA_EEPROM_MAGIC_ADDR, VIA_MAGIC_CODE);
 }
@@ -78,7 +82,7 @@ void via_qmk_rgb_matrix_command(__idata uint8_t *data)
     switch (*command_id) {
         case id_custom_set_value:
         case id_custom_save:
-            if (timer_elapsed32(eeprom_save_interval) >= VIA_EEPROM_SAVE_INTERVAL) {
+            if (timer_elapsed(eeprom_save_interval) >= VIA_EEPROM_SAVE_INTERVAL) {
                 switch (*value_id) {
                     case id_qmk_rgb_matrix_effect:
                         rgb_matrix_set_mode(*value_data);
@@ -181,6 +185,26 @@ void via_custom_value_command(__idata uint8_t *data) {
         return;
     }
 #endif //RGB_MATRIX_ENABLE
+#ifdef TAP_DANCE_ENABLE
+    else if (*channel_id == id_qmk_tap_dance_channel) {
+        __data uint16_t keycode;
+        switch (*command_id) {
+            case id_custom_set_value:
+            case id_custom_save:
+                if (*value_id >= id_qmk_tap_dance_td0 && *value_id <= id_qmk_tap_dance_td4) {
+                    keycode = ((value_data[1] << 8) | value_data[2]);
+                    dynamic_set_tap_dance_keycode(*value_id - 1, value_data[0], keycode);
+                }
+                break;
+            case id_custom_get_value:
+                keycode = dynamic_get_tap_dance_keycode(*value_id - 1, value_data[0]);
+                value_data[1] = keycode >> 8;
+                value_data[2] = keycode & 0xFF;
+                break;
+        }
+        return;
+    }
+#endif //TAP_DANCE_ENABLE
 
     *command_id = id_unhandled;
 }

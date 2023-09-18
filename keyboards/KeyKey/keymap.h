@@ -4,7 +4,7 @@
 // clang-format off
 
 #define KEY_MAPS {								\
-    {LCTL(KC_C), LCTL(KC_V)},                   \
+    {{LCTL(KC_C), LCTL(KC_V)},}                 \
 };												\
 
 #define RGB_CONFIG { {                          \

@@ -34,10 +34,10 @@ const led_config_t g_led_config = RGB_CONFIG
 #endif // RGB_EFFECTS_PLUS
 
 __data rgb_config_t rgb_matrix_config;
-__data uint32_t g_rgb_timer;
+__data uint16_t g_rgb_timer;
 
 // internals
-static __idata uint32_t         rgb_timer_buffer;
+static __idata uint16_t         rgb_timer_buffer;
 static __data uint8_t           rgb_last_effect   = UINT8_MAX;
 static __data effect_params_t   rgb_effect_params = {false};
 static __data rgb_task_states   rgb_task_state = SYNCING;
@@ -92,7 +92,7 @@ static void rgb_task_render(uint8_t effect) {
 }
 
 void rgb_matrix_task(void) {
-    rgb_timer_buffer = timer_read32();
+    rgb_timer_buffer = timer_read();
 
     switch (rgb_task_state) {
         case STARTING:
@@ -110,7 +110,7 @@ void rgb_matrix_task(void) {
             rgb_task_state = SYNCING;
             break;
         case SYNCING:
-            if (timer_elapsed32(g_rgb_timer) >= 20) rgb_task_state = STARTING;
+            if (timer_elapsed(g_rgb_timer) >= 20) rgb_task_state = STARTING;
             break;
     }
 }
@@ -162,7 +162,7 @@ void rgb_matrix_reset(void)
 #endif // RGB_EFFECTS_ENABLE
 }
 
-#ifdef RGB_EFFECTS_PLUS
+#if defined(RGB_EFFECTS_PLUS) && defined(RGB_KEY_CONTROL)
 bool process_rgb_matrix(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         if (keycode >= RGB_MODE_U && keycode <= RGB_SPD_U) {

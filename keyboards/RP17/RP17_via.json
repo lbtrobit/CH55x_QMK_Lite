@@ -49,6 +49,31 @@
       "shortName": "FN(1)"
     },
     {
+      "name": "TD(0)",
+      "title": "\u590d\u7528\u952e\u0031",
+      "shortName": "TD(0)"
+    },
+    {
+      "name": "TD(1)",
+      "title": "\u590d\u7528\u952e\u0032",
+      "shortName": "TD(1)"
+    },
+    {
+      "name": "TD(2)",
+      "title": "\u590d\u7528\u952e\u0033",
+      "shortName": "TD(2)"
+    },
+    {
+      "name": "TD(3)",
+      "title": "\u590d\u7528\u952e\u0034",
+      "shortName": "TD(3)"
+    },
+    {
+      "name": "TD(4)",
+      "title": "\u590d\u7528\u952e\u0035",
+      "shortName": "TD(4)"
+    },
+    {
       "name": "RGB\nMode",
       "title": "\u0052\u0047\u0042\u6a21\u5f0f\u5207\u6362",
       "shortName": "Mode"
@@ -138,6 +163,51 @@
           ]
         }
       ]
+    },
+    {
+      "label": "\u590d\u7528\u952e",
+      "content": [
+        {
+          "label": "TD(0)",
+          "content": [
+              {
+                  "label": "\u5355\u51fb",
+                  "type": "keycode",
+                  "content": ["id_qmk_tap_dance_td0[0]", 7, 1, 0]
+              },
+              {
+                  "label": "\u53cc\u51fb",
+                  "type": "keycode",
+                  "content": ["id_qmk_tap_dance_td0[1]", 7, 1, 1]
+              },
+              {
+                  "label": "\u6309\u4f4f",
+                  "type": "keycode",
+                  "content": ["id_qmk_tap_dance_td0[2]", 7, 1, 2]
+              }
+            ]
+          },
+          {
+            "label": "TD(1)",
+            "content": [
+              {
+                  "label": "\u5355\u51fb",
+                  "type": "keycode",
+                  "content": ["id_qmk_tap_dance_td1[0]", 7, 2, 0]
+              },
+              {
+                  "label": "\u53cc\u51fb",
+                  "type": "keycode",
+                  "content": ["id_qmk_tap_dance_td1[1]", 7, 2, 1]
+              },
+              {
+                  "label": "\u6309\u4f4f",
+                  "type": "keycode",
+                  "content": ["id_qmk_tap_dance_td1[2]", 7, 2, 2]
+              }
+            ]
+          }
+        ]
     },
     {
       "label": "\u5b8f\u5faa\u73af",

@@ -100,6 +100,8 @@ enum via_channel_id {
 
     id_qmk_macro_loop_channel = 5,
     id_qmk_macro_system       = 6,
+
+    id_qmk_tap_dance_channel  = 7,
 };
 
 enum via_qmk_rgb_matrix_value {
@@ -124,6 +126,14 @@ enum via_qmk_macro_loop_value {
 enum id_qmk_macro_system_value {
     id_system_eeprom_reset    = 1,
     id_system_bootloader_jump = 2,
+};
+
+enum id_qmk_tap_dance_value {
+    id_qmk_tap_dance_td0    = 1,
+    id_qmk_tap_dance_td1    = 2,
+    id_qmk_tap_dance_td2    = 3,
+    id_qmk_tap_dance_td3    = 4,
+    id_qmk_tap_dance_td4    = 5,
 };
 
 // Called by QMK core to initialize dynamic keymaps etc.

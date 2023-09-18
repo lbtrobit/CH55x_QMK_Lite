@@ -60,6 +60,12 @@ bool process_record_quantum(keyrecord_t *record) {
     }
 #endif // TWO_LAYER_ENABLE
 
+#ifdef TAP_DANCE_ENABLE
+    if (process_tap_dance(keycode, record) == false) {
+        return false;
+    }
+#endif // TAP_DANCE_ENABLE
+
 #ifdef DIAL_ENABLE
     if (keycode >= DIAL_CCW && keycode <= DIAL_CW) {
         process_dial_key(keycode, record);
@@ -71,7 +77,7 @@ bool process_record_quantum(keyrecord_t *record) {
         return false;
     }
 
-#if defined(RGB_EFFECTS_PLUS) && defined(RGB_MATRIX_ENABLE)
+#if defined(RGB_EFFECTS_PLUS) && defined(RGB_MATRIX_ENABLE) && defined(RGB_KEY_CONTROL)
     if (process_rgb_matrix(keycode, record) == false) {
         return false;
     }

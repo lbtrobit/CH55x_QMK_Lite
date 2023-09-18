@@ -67,5 +67,10 @@ uint16_t keymap_key_to_keycode(keypos_t key) {
         return dynamic_keymap_get_encoder(current_layer, key.col, false);
     }
 #endif // ENCODER_ENABLE
+#ifdef TAP_DANCE_ENABLE
+    else if (key.row >= KEYLOC_TAP_DANCE_MIN && key.row <= KEYLOC_TAP_DANCE_MAX) {
+        return dynamic_get_tap_dance_keycode(key.row - KEYLOC_TAP_DANCE_MIN, key.col);
+    }
+#endif // TAP_DANCE_ENABLE
     return KC_NO;
 }

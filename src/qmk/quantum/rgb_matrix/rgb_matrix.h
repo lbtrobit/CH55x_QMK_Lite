@@ -84,5 +84,5 @@ extern __xdata LED_TYPE rgb_matrix_ws2812_array[RGB_MATRIX_LED_COUNT];
 extern const led_point_t k_rgb_matrix_center;
 extern const led_config_t g_led_config;
 extern __data rgb_config_t rgb_matrix_config;
-extern __data uint32_t g_rgb_timer;
+extern __data uint16_t g_rgb_timer;
 

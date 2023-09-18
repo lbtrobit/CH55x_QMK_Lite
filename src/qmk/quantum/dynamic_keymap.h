@@ -18,6 +18,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "quantum.h"
+#include "dynamic_macro.h"
+#include "dynamic_tap_dance.h"
 #ifdef ENCODER_ENABLE
 #    include "encoder.h"
 #endif
@@ -37,29 +39,19 @@
 #define DYNAMIC_KEYMAP_ENCODER_EEPROM_ADDR  (DYNAMIC_KEYMAP_EEPROM_ADDR + (DYNAMIC_KEYMAP_LAYER_COUNT * MATRIX_ROWS * MATRIX_COLS * 2))
 
 #ifdef ENCODER_ENABLE
-#   define DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR (DYNAMIC_KEYMAP_ENCODER_EEPROM_ADDR + (DYNAMIC_KEYMAP_LAYER_COUNT * NUM_ENCODERS * 2 * 2))
+#   define DYNAMIC_TAP_DANCE_EEPROM_ADDR    (DYNAMIC_KEYMAP_ENCODER_EEPROM_ADDR + (DYNAMIC_KEYMAP_LAYER_COUNT * NUM_ENCODERS * 2 * 2))
 #else
-#   define DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR DYNAMIC_KEYMAP_ENCODER_EEPROM_ADDR
+#   define DYNAMIC_TAP_DANCE_EEPROM_ADDR    DYNAMIC_KEYMAP_ENCODER_EEPROM_ADDR
 #endif // ENCODER_ENABLE
 
+#ifdef TAP_DANCE_ENABLE
+#   define DYNAMIC_TAP_DANCE_EEPROM_SIZE    (TAP_DANCE_COUNT * 2 * 3)  
+#   define DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR (DYNAMIC_TAP_DANCE_EEPROM_ADDR + DYNAMIC_TAP_DANCE_EEPROM_SIZE)
+#else
+#   define DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR DYNAMIC_TAP_DANCE_EEPROM_ADDR
+#endif // TAP_DANCE_ENABLE
+
 #define DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE    (DYNAMIC_KEYMAP_EEPROM_MAX_ADDR - DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + 1)
-
-#define MACRO_ID_NULL  0xFF
-
-typedef struct
-{
-    uint8_t macro_id;   // Current macro ID
-    uint8_t dataPtr;    // Current position in the macro data
-    uint8_t startPtr;   // Start position in the macro data
-    uint8_t loopCount;  // Number of times to loop
-    uint16_t delayms;   // delay code
-} dynamic_macro_t;
-
-typedef enum{
-    MACRO_STATE_ABORTED,
-    MACRO_STATE_RUNNING,
-    MACRO_STATE_DONE
-} macro_state_e;
 
 uint16_t dynamic_keymap_get_keycode(uint8_t layer, uint8_t row, uint8_t column);
 void     dynamic_keymap_set_keycode(uint8_t layer, uint8_t row, uint8_t column, uint16_t keycode);
@@ -68,7 +60,3 @@ uint16_t dynamic_keymap_get_encoder(uint8_t layer, uint8_t encoder_id, bool cloc
 void     dynamic_keymap_set_encoder(uint8_t layer, uint8_t encoder_id, bool clockwise, uint16_t keycode);
 #endif // ENCODER_ENABLE
 void dynamic_keymap_reset(void);
-void dynamic_macro_reset(void);
-void dynamic_macro_loop_reset(void);
-void dynamic_macro_pressed(uint8_t id);
-void dynamic_macro_task(void);

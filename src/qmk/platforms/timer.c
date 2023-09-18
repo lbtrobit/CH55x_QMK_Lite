@@ -21,7 +21,6 @@ uint32_t timer_read32(void)
     return millis() - time_offset;
 }
 
-uint32_t timer_elapsed32(uint32_t tlast)
-{
-    return TIMER_DIFF_32(timer_read32(), tlast);
+uint16_t timer_elapsed(uint16_t last) {
+    return TIMER_DIFF_16(timer_read(), last);
 }

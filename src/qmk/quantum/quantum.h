@@ -44,18 +44,22 @@
 
 enum keycodes_user {
     BASE_CODE = QK_KB_0 - 1,
-#ifdef DIAL_ENABLE
+
     DIAL_CCW,
     DIAL_BUTTON,
-    DIAL_CW,   
-#endif
-#ifdef TWO_LAYER_ENABLE
+    DIAL_CW,
+
     KC_TO_0,
     KC_TO_1,
     KC_MO_0,
     KC_MO_1,
-#endif
-#ifdef RGB_EFFECTS_PLUS
+
+    KC_TD_0,
+    KC_TD_1,
+    KC_TD_2,
+    KC_TD_3,
+    KC_TD_4,
+    
     RGB_MODE_U,
     RGB_HUI_U,
     RGB_HUD_U,
@@ -64,8 +68,7 @@ enum keycodes_user {
     RGB_VAI_U,
     RGB_VAD_U,
     RGB_SPI_U,
-    RGB_SPD_U,
-#endif   
+    RGB_SPD_U, 
 };
 
 extern __data uint8_t current_layer, layer_store;

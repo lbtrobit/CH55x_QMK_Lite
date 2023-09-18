@@ -121,6 +121,10 @@ void keyboard_task(void) {
     encoder_read();
 #endif
 
+#ifdef TAP_DANCE_ENABLE
+    tap_dance_task();
+#endif
+
 #ifdef LED_ENABLE
     led_task();
 #endif

@@ -15,19 +15,28 @@
 
 #define DIRECT_PINS { { 16, 14} }   //按键为引脚直连到地，从左到右为为行到列定义引脚
 
-/* 总可用rom:14336bytes，以上基础功能rom:9850 bytes，剩余rom:4486 bytes，以下功能根据需求和rom开启*/
+/* 总可用rom:14336bytes，以上基础功能rom:9011 bytes，剩余rom:5325 bytes，以下功能根据需求和rom开启*/
 
-#define EXTRAKEY_ENABLE         //开启可设置为多媒体和系统按键，rom:645 bytes
+// #define TWO_LAYER_ENABLE        //开启双层按键切换，多于25键时要关掉，dataflash不够，rom: 222 bytes
 
-#define MOUSE_ENABLE            //开启可设置为鼠标键，rom:934 bytes
+#define TAP_DANCE_ENABLE        //开启复用键功能，一个按键可设置单击、双击、长按三种功能，rom: 716 bytes
+#define TAP_DANCE_COUNT  2      //复用键个数，最多5个，每个占用dataflash 6 bytes
+#define TAPPING_TERM     200    //复用键判断时间，单位ms
+
+#define EXTRAKEY_ENABLE         //开启可设置为多媒体和系统按键，rom: 619 bytes
+
+#define MOUSE_ENABLE            //开启可设置为鼠标键，rom:886 bytes
 #define FCODE_TO_MOUSE_ENABLE   //开启发宏时F13-F23键转鼠标按键，补充VIA不能设置发鼠标按键宏，能拓展更多应用。键值对应关系如表：FCodeToMousemap
 
-#define RGB_MATRIX_ENABLE       //开启RGB灯效，开启后默认开启via设置固定RGB和signalrgb两种模式，rom:1554 bytes
+#define DIAL_ENABLE             //开启surface dial按键功能，rom:404 bytes
+
+#define RGB_MATRIX_ENABLE       //开启RGB灯效，开启后默认开启via设置固定RGB和signalrgb两种模式，rom:1158 bytes
 #define WS2812_DI_PIN        15 //RGB灯数据引脚
 #define RGB_MATRIX_LED_COUNT 2  //RGB灯数量
-#define RGB_EFFECTS_PLUS        //再开启四种色彩循环本地灯效，rom:1330 bytes
+#define RGB_EFFECTS_PLUS        //开启6种色彩循环本地灯效，rom: 1206 bytes
+#define RGB_KEY_CONTROL         //开启按键控制6种色彩循环灯效，rom: 404 bytes
 
-// #define ENCODER_ENABLE          //开启编码器，rom:1304 bytes
+// #define ENCODER_ENABLE          //开启编码器，rom:1316 bytes
 #define NUM_ENCODERS    1       //编码器个数
 #define ENCODERS_PAD_A  { 12 }  //编码器A引脚
 #define ENCODERS_PAD_B  { 13 }  //编码器B引脚
