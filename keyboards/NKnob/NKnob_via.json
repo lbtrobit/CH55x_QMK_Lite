@@ -1,0 +1,290 @@
+{
+  "name": "NKnob",
+  "vendorId": "0x5262",
+  "productId": "0x4E4B",
+  "matrix": {"rows": 1, "cols": 1},
+  "layouts": {
+    "keymap": [
+      ["0,0\n\n\n\n\n\n\n\n\ne0"]
+    ]
+  },
+  "customKeycodes": [
+    {
+      "name": "Dial -",
+      "title": "\u0053\u0075\u0072\u0066\u0061\u0063\u0065\u0020\u0044\u0069\u0061\u006c\u9006\u65f6\u9488\u8f6c",
+      "shortName": "Dial -"
+    },
+    {
+      "name": "Dial\nButton",
+      "title": "\u0053\u0075\u0072\u0066\u0061\u0063\u0065\u0020\u0044\u0069\u0061\u006c\u6309\u952e",
+      "shortName": "Dial B"
+    },
+    {
+      "name": "Dial +",
+      "title": "\u0053\u0075\u0072\u0066\u0061\u0063\u0065\u0020\u0044\u0069\u0061\u006c\u987a\u65f6\u9488\u8f6c",
+      "shortName": "Dial +"
+    },
+    {
+      "name": "TO(0)",
+      "title": "\u5207\u6362\u5230\u5c42\u0030",
+      "shortName": "TO(0)"
+    },
+    {
+      "name": "TO(1)",
+      "title": "\u5207\u6362\u5230\u5c42\u0031",
+      "shortName": "TO(1)"
+    },
+    {
+      "name": "FN(0)",
+      "title": "\u6309\u4f4f\u5207\u6362\u5230\u5c42\u0030",
+      "shortName": "FN(0)"
+    },
+    {
+      "name": "FN(1)",
+      "title": "\u6309\u4f4f\u5207\u6362\u5230\u5c42\u0031",
+      "shortName": "FN(1)"
+    },
+    {
+      "name": "TD(0)",
+      "title": "\u590d\u7528\u952e\u0031",
+      "shortName": "TD(0)"
+    },
+    {
+      "name": "TD(1)",
+      "title": "\u590d\u7528\u952e\u0032",
+      "shortName": "TD(1)"
+    },
+    {
+      "name": "TD(2)",
+      "title": "\u590d\u7528\u952e\u0033",
+      "shortName": "TD(2)"
+    },
+    {
+      "name": "TD(3)",
+      "title": "\u590d\u7528\u952e\u0034",
+      "shortName": "TD(3)"
+    },
+    {
+      "name": "TD(4)",
+      "title": "\u590d\u7528\u952e\u0035",
+      "shortName": "TD(4)"
+    },
+    {
+      "name": "RGB\nMode",
+      "title": "\u0052\u0047\u0042\u6a21\u5f0f\u5207\u6362",
+      "shortName": "Mode"
+    },
+    {
+      "name": "RGB\nHue +",
+      "title": "\u0052\u0047\u0042\u8272\u76f8\u52a0",
+      "shortName": "Hue +"
+    },
+    {
+      "name": "RGB\nHue -",
+      "title": "\u0052\u0047\u0042\u8272\u76f8\u51cf",
+      "shortName": "Hue -"
+    },
+    {
+      "name": "RGB\nSat +",
+      "title": "\u0052\u0047\u0042\u9971\u548c\u5ea6\u52a0",
+      "shortName": "Sat +"
+    },
+    {
+      "name": "RGB\nSat -",
+      "title": "\u0052\u0047\u0042\u9971\u548c\u5ea6\u51cf",
+      "shortName": "Sat -"
+    },
+    {
+      "name": "RGB\nVal +",
+      "title": "\u0052\u0047\u0042\u4eae\u5ea6\u52a0",
+      "shortName": "Val +"
+    },
+    {
+      "name": "RGB\nVal -",
+      "title": "\u0052\u0047\u0042\u4eae\u5ea6\u51cf",
+      "shortName": "Val -"
+    },
+    {
+      "name": "RGB\nSpd +",
+      "title": "\u0052\u0047\u0042\u901f\u5ea6\u52a0",
+      "shortName": "Spd +"
+    },
+    {
+      "name": "RGB\nSpd -",
+      "title": "\u0052\u0047\u0042\u901f\u5ea6\u51cf",
+      "shortName": "Spd -"
+    }
+  ],
+  "menus": [
+    {
+      "label": "Lighting",
+      "content": [
+        {
+          "label": "Backlight",
+          "content": [
+            {
+              "label": "Effect",
+              "type": "dropdown",
+              "content": ["id_qmk_rgb_matrix_effect", 3, 2],
+              "options": [
+                "All Off",
+                "Solid RGB"
+              ]
+            },
+            {
+              "showIf": "{id_qmk_rgb_matrix_effect} == 1",
+              "label": "Red",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_rgb_matrix_color_red", 3, 5]
+            },
+            {
+              "showIf": "{id_qmk_rgb_matrix_effect} == 1",
+              "label": "Green",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_rgb_matrix_color_green", 3, 6]
+            },
+            {
+              "showIf": "{id_qmk_rgb_matrix_effect} == 1",
+              "label": "Blue",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_rgb_matrix_color_blue", 3, 7]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "\u590d\u7528\u952e",
+      "content": [
+        {
+          "label": "TD(0)",
+          "content": [
+              {
+                  "label": "\u5355\u51fb",
+                  "type": "keycode",
+                  "content": ["id_qmk_tap_dance_td0[0]", 7, 1, 0]
+              },
+              {
+                  "label": "\u53cc\u51fb",
+                  "type": "keycode",
+                  "content": ["id_qmk_tap_dance_td0[1]", 7, 1, 1]
+              },
+              {
+                  "label": "\u6309\u4f4f",
+                  "type": "keycode",
+                  "content": ["id_qmk_tap_dance_td0[2]", 7, 1, 2]
+              }
+            ]
+          },
+          {
+            "label": "TD(1)",
+            "content": [
+              {
+                  "label": "\u5355\u51fb",
+                  "type": "keycode",
+                  "content": ["id_qmk_tap_dance_td1[0]", 7, 2, 0]
+              },
+              {
+                  "label": "\u53cc\u51fb",
+                  "type": "keycode",
+                  "content": ["id_qmk_tap_dance_td1[1]", 7, 2, 1]
+              },
+              {
+                  "label": "\u6309\u4f4f",
+                  "type": "keycode",
+                  "content": ["id_qmk_tap_dance_td1[2]", 7, 2, 2]
+              }
+            ]
+          }
+        ]
+    },
+    {
+      "label": "\u5b8f\u5faa\u73af",
+      "content": [
+        {
+          "label": " M0 ",
+          "content": [
+            {
+              "label": "\u5b8f\u5faa\u73af\u0030\u002d\u0032\u0035\u0035\u6b21\uff0c\u6700\u5927\u503c\u65f6\u4e3a\u65e0\u9650\u5faa\u73af\uff0c\u518d\u6b21\u6309\u5b8f\u505c\u6b62",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m0", 5, 1]
+            }
+          ]
+        },
+        {
+          "label": " M1 ",
+          "content": [
+            {
+              "label": "\u5b8f\u5faa\u73af\u0030\u002d\u0032\u0035\u0035\u6b21\uff0c\u6700\u5927\u503c\u65f6\u4e3a\u65e0\u9650\u5faa\u73af\uff0c\u518d\u6b21\u6309\u5b8f\u505c\u6b62",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m1", 5, 2]
+            }
+          ]
+        },
+        {
+          "label": " M2 ",
+          "content": [
+            {
+              "label": "\u5b8f\u5faa\u73af\u0030\u002d\u0032\u0035\u0035\u6b21\uff0c\u6700\u5927\u503c\u65f6\u4e3a\u65e0\u9650\u5faa\u73af\uff0c\u518d\u6b21\u6309\u5b8f\u505c\u6b62",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m2", 5, 3]
+            }
+          ]
+        },
+        {
+          "label": " M3 ",
+          "content": [
+            {
+              "label": "\u5b8f\u5faa\u73af\u0030\u002d\u0032\u0035\u0035\u6b21\uff0c\u6700\u5927\u503c\u65f6\u4e3a\u65e0\u9650\u5faa\u73af\uff0c\u518d\u6b21\u6309\u5b8f\u505c\u6b62",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m3", 5, 4]
+            }
+          ]
+        },
+        {
+          "label": " M4 ",
+          "content": [
+            {
+              "label": "\u5b8f\u5faa\u73af\u0030\u002d\u0032\u0035\u0035\u6b21\uff0c\u6700\u5927\u503c\u65f6\u4e3a\u65e0\u9650\u5faa\u73af\uff0c\u518d\u6b21\u6309\u5b8f\u505c\u6b62",
+              "type": "range",
+              "options": [0, 255],
+              "content": ["id_qmk_macro_loop_m4", 5, 5]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "\u7cfb\u7edf\u8bbe\u7f6e",
+      "content": [
+        {
+          "label": "\u51fa\u5382\u8bbe\u7f6e",
+          "content": [
+            {
+              "label": "\u6062\u590d\u51fa\u5382\u8bbe\u7f6e",
+              "type": "toggle",
+              "content": ["id_system_eeprom_reset", 6, 1]
+            }
+          ]
+        },
+        {
+          "label": "\u5347\u7ea7",
+          "content": [
+            {
+              "label": "\u8fdb\u5165\u5347\u7ea7\u6a21\u5f0f",
+              "type": "toggle",
+              "content": ["id_system_bootloader_jump", 6, 2]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

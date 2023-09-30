@@ -25,8 +25,8 @@
 #    define ENCODER_RESOLUTION 4
 #endif
 
-static __idata pin_t encoders_pad_a[NUM_ENCODERS] = ENCODERS_PAD_A;
-static __idata pin_t encoders_pad_b[NUM_ENCODERS] = ENCODERS_PAD_B;
+static const pin_t encoders_pad_a[NUM_ENCODERS] = ENCODERS_PAD_A;
+static const pin_t encoders_pad_b[NUM_ENCODERS] = ENCODERS_PAD_B;
 
 #ifdef ENCODER_RESOLUTIONS
 static __xdata uint8_t encoder_resolutions[NUM_ENCODERS] = ENCODER_RESOLUTIONS;
@@ -40,7 +40,7 @@ static __xdata uint8_t encoder_resolutions[NUM_ENCODERS] = ENCODER_RESOLUTIONS;
 #    define ENCODER_COUNTER_CLOCKWISE   true
 #endif
 
-static __xdata int8_t encoder_LUT[] = {0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0};
+static const int8_t encoder_LUT[] = {0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0};
 static __idata uint8_t encoder_state[NUM_ENCODERS]  = {0};
 static __idata int8_t  encoder_pulses[NUM_ENCODERS] = {0};
 
@@ -60,13 +60,22 @@ void encoder_init(void) {
 
 static void encoder_exec_mapping(uint8_t index, bool clockwise) {
     // The delays below cater for Windows and its wonderful requirements.
-    keyevent_t event_tmp1 = {.key = {.row = KEYLOC_ENCODER_CW, .col = index}, .pressed = true, .time = timer_read(), .type = ENCODER_CW_EVENT};
-    keyevent_t event_tmp2 = {.key = {.row = KEYLOC_ENCODER_CCW, .col = index}, .pressed = true, .time = timer_read(), .type = ENCODER_CCW_EVENT};
-    action_exec(clockwise ? event_tmp1 : event_tmp2);
+    keyevent_t event_tmp;
+    event_tmp.key.col = index;
+    event_tmp.pressed = true;
+    event_tmp.time = timer_read();
+
+    if (clockwise) {
+        event_tmp.key.row = KEYLOC_ENCODER_CW;
+        event_tmp.type = ENCODER_CW_EVENT;
+    } else {
+        event_tmp.key.row = KEYLOC_ENCODER_CCW;
+        event_tmp.type = ENCODER_CCW_EVENT; 
+    }
+    action_exec(event_tmp);
     wait_ms(10);
-    event_tmp1.pressed = false;
-    event_tmp2.pressed = false;
-    action_exec(clockwise ? event_tmp1 : event_tmp2);
+    event_tmp.pressed = false;
+    action_exec(event_tmp);
     wait_ms(10);
 }
 

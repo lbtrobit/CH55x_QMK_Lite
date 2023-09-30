@@ -20,6 +20,13 @@
 #include <stdbool.h>
 #include "../color.h"
 
+#ifndef RGB_MATRIX_ROWS
+#define RGB_MATRIX_ROWS MATRIX_ROWS
+#endif
+#ifndef RGB_MATRIX_COLS
+#define RGB_MATRIX_COLS MATRIX_COLS
+#endif
+
 typedef enum rgb_task_states { 
     STARTING, 
     RENDERING, 
@@ -48,7 +55,7 @@ typedef struct {
 #define NO_LED 255
 
 typedef struct {
-    uint8_t     matrix_co[MATRIX_ROWS][MATRIX_COLS];
+    uint8_t     matrix_co[RGB_MATRIX_ROWS][RGB_MATRIX_COLS];
     led_point_t point[RGB_MATRIX_LED_COUNT];
 } led_config_t;
 
