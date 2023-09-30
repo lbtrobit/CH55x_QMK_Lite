@@ -14,6 +14,9 @@ extern __xdata __at (EP1_ADDR) uint8_t Ep1Buffer[];
 extern __xdata __at (EP2_ADDR) uint8_t Ep2Buffer[];
 // clang-format on
 
+extern volatile __data uint8_t UpPoint1_Busy;
+extern volatile __data uint8_t UpPoint2_Busy;
+
 void USB_EP1_IN();
 void USB_EP1_OUT();
 void USB_EP2_IN();

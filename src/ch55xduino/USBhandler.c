@@ -448,6 +448,8 @@ void USBInterrupt(void) { // inline not really working in multiple files in SDCC
     UIF_SUSPEND = 0;
     UIF_TRANSFER = 0;
     UIF_BUS_RST = 0;
+    UpPoint1_Busy = 0;
+    UpPoint2_Busy = 0;
 
     UsbConfig = 0;
 

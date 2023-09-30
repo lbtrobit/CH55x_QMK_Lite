@@ -42,10 +42,10 @@ void USB_EP1_OUT(){
 uint8_t USB_EP1_send(const __idata uint8_t *data, __data uint8_t data_len) {
     uint16_t waitWriteCount = 0;
 
-    while (UpPoint1_Busy) { // wait for 250ms or give up
+    while (UpPoint1_Busy) { // wait for 100ms or give up
         waitWriteCount++;
         delayMicroseconds(5);
-        if (waitWriteCount >= 50000) { return 0; }
+        if (waitWriteCount >= 20000) { return 0; }
     }
 
     memcpy(&Ep1Buffer[64], data, data_len);
