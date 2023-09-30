@@ -1,0 +1,7 @@
+{
+  "name": "NKnob",
+  "vendorProductId": 1382174283,
+  "macros": ["", "", "", "", ""],
+  "layers": [["KC_SPC"]],
+  "encoders": [[["KC_LEFT", "KC_RGHT"]]]
+}
