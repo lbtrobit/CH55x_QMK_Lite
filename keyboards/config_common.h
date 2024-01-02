@@ -1,4 +1,4 @@
 #pragma once
 
-#include "NRGB/config.h"
-#include "NRGB/keymap.h"
+#include "RP17/config.h"
+#include "RP17/keymap.h"

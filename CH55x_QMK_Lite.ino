@@ -19,6 +19,7 @@
 #include "src/CH55x_QMK_Lite.h"
 
 void setup() {
+  delay(1000);
   ch55xQmkLite_init();
 }
 

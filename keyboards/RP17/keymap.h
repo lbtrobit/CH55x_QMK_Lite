@@ -35,4 +35,10 @@
     { 150,  0 },  {  75,  0 },  { 0,  0 },                      \
 }};                                                             \
 
+#define RGB_MODE_RESET {                        \
+    .mode = RGB_MATRIX_CYCLE_UP_DOWN,           \
+    .hsv.h = 120, .hsv.s = 255, .hsv.v = 100,   \
+    .speed = 50,                                \
+};                                              \
+
 // clang-format on

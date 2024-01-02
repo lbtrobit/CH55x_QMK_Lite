@@ -19,4 +19,9 @@
     { 0,  0 }, { 224,  0 },                     \
 }};                                             \
 
+#define RGB_MODE_RESET {                        \
+    .mode = RGB_MATRIX_NONE,                    \
+    .rgb.r = 0, .rgb.g = 125, .rgb.b = 125,     \
+};                                              \
+
 // clang-format on

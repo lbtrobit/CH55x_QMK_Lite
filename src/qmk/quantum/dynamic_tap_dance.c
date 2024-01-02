@@ -81,16 +81,18 @@ void tap_dance_task(void) {
 bool process_tap_dance(uint16_t keycode, keyrecord_t *record) {
     if (keycode >= KC_TD_0 && keycode <= KC_TD_4) {
         uint8_t id = keycode - KC_TD_0;
-        if (record->event.pressed) {
-            td_info.id = id;
+        if (td_info.wait_release == true) {
+            dynamic_tap_dance_key_event(td_info.id, TD_HOLD, false);
+            tap_dance_info_reset();
         } else {
-            if (td_info.wait_release == true) {
-                dynamic_tap_dance_key_event(td_info.id, TD_HOLD, false);
-                tap_dance_info_reset();
-            } else if (td_info.id == id) {
-                td_info.count++;
+            if (record->event.pressed) {
+                td_info.id = id;
+            } else {
+                if (td_info.id == id) {
+                    td_info.count++;
+                }
             }
-        }
+        } 
         td_info.last_time = timer_read();
         return false;
     }

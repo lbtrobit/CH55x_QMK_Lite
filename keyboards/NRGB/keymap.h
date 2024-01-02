@@ -41,4 +41,10 @@
     { 0,  0 },                                  \
 }};                                             \
 
+#define RGB_MODE_RESET {                        \
+    .mode = RGB_MATRIX_RAINBOW_MOVING_CHEVRON,  \
+    .hsv.h = 10, .hsv.s = 255, .hsv.v = 100,    \
+    .speed = 25,                                \
+};                                              \
+
 // clang-format on

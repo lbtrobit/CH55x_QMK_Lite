@@ -67,3 +67,10 @@ typedef union {
         uint8_t     speed;
     };
 } rgb_config_t;
+
+typedef struct {
+    uint8_t     mode;
+    RGB         rgb;
+    HSV         hsv;
+    uint8_t     speed;
+} rgb_mode_reset_t;

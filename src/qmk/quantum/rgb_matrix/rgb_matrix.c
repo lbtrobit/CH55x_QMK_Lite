@@ -33,6 +33,8 @@ const led_point_t k_rgb_matrix_center = RGB_MATRIX_CENTER;
 const led_config_t g_led_config = RGB_CONFIG
 #endif // RGB_EFFECTS_PLUS
 
+const rgb_mode_reset_t rgb_mode_reset = RGB_MODE_RESET
+
 __data rgb_config_t rgb_matrix_config;
 __data uint16_t g_rgb_timer;
 
@@ -150,15 +152,15 @@ void rgb_matrix_set_speed(uint8_t speed) {
 void rgb_matrix_reset(void)
 {
 #ifdef RGB_EFFECTS_PLUS
-    rgb_matrix_set_hs(10, 255);
-    rgb_matrix_set_val(100);
-    rgb_matrix_set_speed(50);
-    rgb_matrix_set_mode(RGB_MATRIX_CYCLE_ALL);
+    rgb_matrix_set_hs(rgb_mode_reset.hsv.h, rgb_mode_reset.hsv.s);
+    rgb_matrix_set_val(rgb_mode_reset.hsv.v);
+    rgb_matrix_set_speed(rgb_mode_reset.speed);
+    rgb_matrix_set_mode(rgb_mode_reset.mode);
 #else
-    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_RED, 0x00);
-    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_GREEN, 0x80);
-    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_BLUE, 0x80);
-    rgb_matrix_set_mode(RGB_MATRIX_NONE);
+    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_RED, rgb_mode_reset.rgb.r);
+    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_GREEN, rgb_mode_reset.rgb.g);
+    eeprom_write_byte(RGB_MATRIX_EEPROM_ADDR_BLUE, rgb_mode_reset.rgb.b);
+    rgb_matrix_set_mode(rgb_mode_reset.mode);
 #endif // RGB_EFFECTS_ENABLE
 }
 

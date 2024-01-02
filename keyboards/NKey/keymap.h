@@ -13,4 +13,10 @@
     { 0,  0 },                                  \
 }};                                             \
 
+#define RGB_MODE_RESET {                        \
+    .mode = RGB_MATRIX_NONE,                    \
+    .hsv.h = 10, .hsv.s = 255, .hsv.v = 100,    \
+    .speed = 50,                                \
+};                                              \
+
 // clang-format on

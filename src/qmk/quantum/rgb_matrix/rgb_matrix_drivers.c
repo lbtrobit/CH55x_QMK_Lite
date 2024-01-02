@@ -25,6 +25,7 @@ __xdata LED_TYPE rgb_matrix_ws2812_array[RGB_MATRIX_LED_COUNT];
 
 void ws2812_init(void) {
     pinMode(WS2812_DI_PIN, OUTPUT);
+    digitalWrite(WS2812_DI_PIN, LOW);
 }
 
 void ws2812_flush(void) {
